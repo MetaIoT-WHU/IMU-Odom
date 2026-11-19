@@ -225,9 +225,9 @@
     const s = data.scenes[id];
     const card = el('article', 'scene-card');
     const heading = el('div', 'scene-card-heading');
-    const text = el('div'); text.append(el('h3', '', s.title), el('p', '', s.subtitle));
+    const text = el('div'); text.append(el('h3', '', s.title), el('p', '', s.subtitle+' · '+s.splitLabel));
     heading.append(text, el('span', 'pill', s.quality));
-    text.append(el('p','assistance-label',s.gnssAdded ? s.gnssLabel : '间歇视觉位置辅助（未加入GNSS观测）'));
+    text.append(el('p','assistance-label',s.gnssAdded ? '辅助对照'+s.gnssLabel : '间歇视觉位置辅助（未加入GNSS观测）'));
     const host = el('div');
     const meta = el('div', 'card-meta');
     meta.append(el('span','',`${s.anchorCount} 个${s.gnssAdded?' GNSS ':'视觉'}点 · 位置均方根误差 ${s.errorBefore.toFixed(2)} → ${s.errorAfter.toFixed(2)} 米`)); 
@@ -266,7 +266,7 @@
     $('#gallery-category').textContent = s.location;
     $('#gallery-name').textContent = s.title;
 
-    $('#gallery-note').textContent = s.note+' 辅助点取自同一参考轨迹。yaw 为行进航向。';
+    $('#gallery-note').textContent = s.splitLabel+' · 基础推理仅使用手表惯性传感器。展示坐标用参考轨迹对齐。'+s.note+'辅助点与真值同源。yaw 为行进航向。';
     const host=$('#gallery-player');
     if(galleryCanvas){galleryCanvas.destroy();galleryCanvas=null;}
     if(host._player){host._player.destroy();host._player=null;host.replaceChildren();}
