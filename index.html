@@ -7,12 +7,12 @@
   <meta name="description" content="运动轨迹效果展示：室内与室外、小尺度与长距离，实景视频与轨迹动态对照。">
   <title>迹 · 运动轨迹效果展示</title>
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css">
-  <script src="data.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=map-camera-2">
+  <script src="data.js?v=map-camera-2" defer></script>
   <script src="gallery.js" defer></script>
-  <script src="sparse.js" defer></script>
-  <script src="trajectory.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="sparse.js?v=map-camera-2" defer></script>
+  <script src="trajectory.js?v=map-camera-2" defer></script>
+  <script src="app.js?v=map-camera-2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#small">跳到效果展示</a>
@@ -43,7 +43,7 @@
       <div class="section-heading"><h2 id="large-title">长距离路线</h2></div>
       <div class="large-tabs" id="large-tabs" aria-label="大尺度场景"></div>
       <div class="large-stage"><div class="stage-heading"><div><h3 id="large-name"></h3></div><span id="large-badge" class="pill"></span></div><div id="large-player"></div></div>
-      <div class="section-footer"><button type="button" id="large-history" hidden>查看历史回放</button><a id="large-original" target="_blank" rel="noopener"></a><a href="#gallery" class="text-link">更多轨迹对照 <span>↗</span></a></div>
+      <div class="section-footer"><button type="button" id="large-history" hidden>查看历史回放</button><a href="#gallery" class="text-link">更多轨迹对照 <span>↗</span></a></div>
     </div></section>
 
     <section id="gallery" class="section wrap" aria-labelledby="gallery-title">
@@ -51,7 +51,7 @@
       <div class="gallery-toolbar"><div class="filter-row" id="gallery-filters" aria-label="筛选轨迹"></div><label class="animation-toggle">动态播放 <input type="checkbox" id="gallery-animation" checked><span aria-hidden="true"></span></label></div>
       <div class="gallery-layout">
         <aside class="gallery-sidebar"><h3>浏览场景</h3><label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="gallery-search" type="search" placeholder="搜索场景名称" aria-label="搜索轨迹场景"></label><div id="gallery-list" class="gallery-list" aria-label="场景列表"></div><div class="list-footer"><span id="gallery-count"></span></div></aside>
-        <div class="gallery-main"><div class="gallery-caption"><div><span id="gallery-category" class="eyebrow"></span><h3 id="gallery-name"></h3></div><div class="step-buttons"><button id="gallery-mode" aria-pressed="false">看视频</button><button id="gallery-prev" aria-label="上一条轨迹">← 上一个</button><button id="gallery-next" aria-label="下一条轨迹">下一个 →</button></div></div><div id="gallery-player"></div><p id="gallery-note" class="section-note"></p></div>
+        <div class="gallery-main"><div class="gallery-caption"><div><span id="gallery-category" class="eyebrow"></span><h3 id="gallery-name"></h3></div><div class="step-buttons"><button id="gallery-mode" aria-pressed="false">看轨迹回放</button><button id="gallery-prev" aria-label="上一条轨迹">← 上一个</button><button id="gallery-next" aria-label="下一条轨迹">下一个 →</button></div></div><div id="gallery-player"></div><p id="gallery-note" class="section-note"></p></div>
       </div>
     </section>
 
@@ -86,6 +86,6 @@
   </main>
   <footer class="site-footer wrap"><a class="brand" href="#top"><img src="assets/mark.svg" width="28" height="28" alt=""><strong>迹<span>运动轨迹</span></strong></a><a class="back-top" href="#top">回到顶部 ↑</a></footer>
   <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
-  <noscript><p class="noscript">请启用浏览器脚本以切换视频。所有素材均保存在本地“assets”目录。</p></noscript>
+  <noscript><p class="noscript">请启用浏览器脚本以查看轨迹回放。所有素材均保存在本地“assets”目录。</p></noscript>
 </body>
 </html>

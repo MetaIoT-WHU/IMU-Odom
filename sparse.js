@@ -132,7 +132,7 @@
       const token=this.token, clip=this.clip, map=this.scene.mapLayer;
       this.loading=true;this.status.hidden=false;this.status.textContent='正在加载轨迹…';
       try {
-        const imageTasks=this.views.map(({image})=>{image.src=map.src;return image.decode();});
+        const imageTasks=this.views.map(({image})=>window.showcaseMapReady(image,map.src));
         const [data]=await Promise.all([loadRoute(clip),...imageTasks]);
         if(token!==this.token)return;
         this.data=data;this.seek.disabled=false;

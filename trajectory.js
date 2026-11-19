@@ -21,6 +21,13 @@
     }
     return pending.get(item.payload);
   }
+  // Decode the displayed element, then give the browser a paint between the
+  // image becoming visible and inserting the first overlay or advancing time.
+  window.showcaseMapReady = async function(image,src) {
+    image.src=src;
+    await image.decode();
+    await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));
+  };
   function svg(tag, parent, attrs = {}, text) {
     const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [key,value] of Object.entries(attrs)) node.setAttribute(key,value);
@@ -78,7 +85,6 @@
     if(map){
       const [w,h]=map.nativeSize, k=Math.min(width/w,height/h);
       const x=(width-k*w)/2,y=(height-k*h)/2;
-      svg('image',view,{href:map.src,x,y,width:w*k,height:h*k});
       project=p=>[x+p[0]*w*k,y+p[1]*h*k];
     }else{
       const left=62,right=617,top=23,bottom=395;
@@ -104,11 +110,13 @@
     return (i,f)=>paths.forEach(draw=>draw(i,f));
   }
   function motion(view,data,item) {
-    const left=56,right=416,bottom=405;
+    const left=56,right=416, height=item.camera?300:445;
+    const rowHeight=(height-40)/3;
+    view.setAttribute('viewBox','0 0 440 '+height);
     const end=data.t.at(-1), keys=['vx','vy',data.speedpred?'speed':'yaw'];
     const cursors=[], clips=[];
     keys.forEach((key,row)=>{
-      const top=30+row*135, floor=top+94;
+      const top=24+row*rowHeight, floor=(row+1)*rowHeight-9;
       const [low,high]=limits(item.legend.map(s=>data[key+s.id]));
       const pad=Math.max((high-low)*.09,key==='yaw'?2:.1);
       const y=v=>floor-(v-low+pad)/(high-low+2*pad)*(floor-top);
@@ -119,7 +127,7 @@
       }
       for(const f of [0,.25,.5,.75,1]){
         const x=left+f*(right-left);line(view,x,top,x,floor);
-        if(row===2)label(view,x,bottom+12,Math.round(f*end),'middle');
+        if(row===2)label(view,x,height-28,Math.round(f*end),'middle');
       }
       const id='time-clip-'+(++serial), cut=svg('clipPath',view,{id});
       clips.push(svg('rect',cut,{x:left-2,y:top-1,height:floor-top+2,width:0}));
@@ -134,7 +142,7 @@
       }
       cursors.push(line(view,left,top,left,floor,'#8297a8'));
     });
-    label(view,(left+right)/2,442,'时间（秒）','middle');
+    label(view,(left+right)/2,height-3,'时间（秒）','middle');
     return fraction=>{
       const x=left+fraction*(right-left);
       cursors.forEach(c=>{c.setAttribute('x1',x);c.setAttribute('x2',x);});
@@ -171,8 +179,30 @@
       get('figcaption').textContent=item.mapLayer?'卫星地图 · 北向上':'平面轨迹';
       const [route,signals]=this.root.querySelectorAll('svg');
       route.setAttribute('aria-label',item.title+'轨迹');
+      const plan=document.createElement('div');
+      plan.className='track-plan';
+      route.before(plan);plan.append(route);
+      const image=item.mapLayer?new Image():null;
+      if(image){
+        image.alt='卫星底图';image.decoding='async';plan.prepend(image);
+      }
+      const camera=item.camera?document.createElement('video'):null;
+      if(camera){
+        camera.className='track-camera';camera.muted=true;camera.defaultMuted=true;
+        camera.playsInline=true;camera.loop=true;camera.preload='none';
+        camera.setAttribute('aria-label',item.title+'同步实拍');
+        camera.width=item.camera.size[0];camera.height=item.camera.size[1];
+        const aside=signals.parentNode;
+        const holder=document.createElement('div');holder.className='camera-inset';
+        const caption=document.createElement('span');caption.textContent='同步实拍';
+        holder.append(camera,caption);aside.prepend(holder);
+        this.root.classList.add('has-camera');
+        this.camera=camera;
+      }
       this.play=true;this.rate=1;this.time=0;
       const play=get('.track-play'),seek=get('input'),out=get('output');
+      const retry=document.createElement('button');retry.type='button';retry.hidden=true;
+      retry.textContent='重新加载';out.after(retry);
       seek.disabled=true;
       const draw=()=>{
         if(!this.data)return;
@@ -182,36 +212,72 @@
         out.value=clock(this.time)+' / '+clock(this.end);
         seek.value=Math.round(this.time/this.end*1000);seek.setAttribute('aria-valuetext',out.value);
       };
+      const cameraSpan=camera?item.duration-1/item.camera.fps:0;
+      const cameraAvailable=()=>camera && !camera.error;
+      const active=()=>this.data && this.play && this.visible && !document.hidden && !this.closed;
       const tick=now=>{
         this.frame=0;
-        if(this.last)this.time=(this.time+Math.min(now-this.last,200)/1000*this.end/item.duration*this.rate)%this.end;
-        this.last=now;draw();schedule();
+        if(!active())return;
+        if(cameraAvailable()){
+          if(!camera.seeking)this.time=Math.min(1,camera.currentTime/cameraSpan)*this.end;
+        }else if(this.last){
+          this.time=(this.time+Math.min(now-this.last,200)/1000*this.end/item.duration*this.rate)%this.end;
+        }
+        this.last=now;draw();this.frame=requestAnimationFrame(tick);
       };
       const schedule=()=>{
-        if(this.frame)cancelAnimationFrame(this.frame);
-        this.frame=0;
-        if(this.data && this.play && this.visible && !document.hidden && !this.closed)this.frame=requestAnimationFrame(tick);
-        else this.last=0;
+        cancelAnimationFrame(this.frame);this.frame=0;this.last=0;
+        if(!active()){camera?.pause();return;}
+        if(cameraAvailable() && camera.paused)camera.play().catch(err=>{
+          if(err.name==='NotAllowedError' && active()){
+            this.play=false;play.textContent='播放';schedule();
+          }
+        });
+        this.frame=requestAnimationFrame(tick);
       };
+      if(camera){
+        camera.onerror=()=>{
+          if(this.closed)return;
+          camera.parentElement.querySelector('span').textContent='实拍暂不可用';
+          schedule();
+        };
+        camera.onloadedmetadata=()=>{
+          if(this.end && this.time)camera.currentTime=this.time/this.end*cameraSpan;
+        };
+      }
       this.onVisibility=schedule;
       document.addEventListener('visibilitychange',schedule);
-      this.observer=new IntersectionObserver(async ([entry])=>{
-        this.visible=entry.isIntersecting;
-        if(this.visible && !this.started){
-          this.started=true;
-          try{
-            const d=await load(item);
-            if(this.closed)return;
-            this.space=space(route,d,item);this.motion=motion(signals,d,item);
-            if(d.pose)this.pose=watch(route,d.pose);
-            this.data=d;this.end=d.t.at(-1);seek.disabled=false;draw();
-          }catch(error){if(!this.closed)out.value='轨迹加载失败';console.error(error);}
+      const start=async()=>{
+        if(this.started || this.closed)return;
+        this.started=true;retry.hidden=true;out.value=image?'底图加载中…':'轨迹加载中…';
+        if(camera && !camera.hasAttribute('src'))camera.src=item.camera.src;
+        try{
+          const [d]=await Promise.all([load(item),image?window.showcaseMapReady(image,item.mapLayer.src):null]);
+          if(this.closed)return;
+          this.space=space(route,d,item);this.motion=motion(signals,d,item);
+          if(d.pose)this.pose=watch(route,d.pose);
+          this.data=d;this.end=d.t.at(-1);seek.disabled=false;draw();schedule();
+        }catch{
+          if(!this.closed){this.started=false;out.value=image?'底图或轨迹加载失败':'轨迹加载失败';retry.hidden=false;}
         }
+      };
+      retry.onclick=start;
+      this.observer=new IntersectionObserver(([entry])=>{
+        this.visible=entry.isIntersecting;
+        if(this.visible)start();
         schedule();
       });this.observer.observe(this.root);
       play.onclick=()=>{this.play=!this.play;play.textContent=this.play?'暂停':'播放';schedule();};
-      seek.oninput=()=>{this.time=this.end*Number(seek.value)/1000;this.last=0;draw();};
-      get('.track-rate').onclick=e=>{this.rate=({1:2,2:4,4:.5,.5:1})[this.rate];e.currentTarget.textContent=this.rate+'×';};
+      seek.oninput=()=>{
+        this.time=this.end*Number(seek.value)/1000;this.last=0;
+        if(cameraAvailable() && camera.readyState)camera.currentTime=this.time/this.end*cameraSpan;
+        draw();
+      };
+      get('.track-rate').onclick=e=>{
+        this.rate=({1:2,2:4,4:.5,.5:1})[this.rate];
+        if(camera)camera.playbackRate=this.rate;
+        e.currentTarget.textContent=this.rate+'×';
+      };
       const expand=get('.track-expand');
       const expanded=()=>{expand.textContent=document.fullscreenElement===this.root||this.root.classList.contains('expanded')?'收起':'放大';};
       this.onFullscreen=expanded;document.addEventListener('fullscreenchange',expanded);
@@ -223,7 +289,9 @@
       };
     }
     destroy(){
-      this.closed=true;cancelAnimationFrame(this.frame);this.observer.disconnect();
+      this.closed=true;
+      if(this.camera){this.camera.onerror=null;this.camera.onloadedmetadata=null;this.camera.pause();this.camera.removeAttribute('src');this.camera.load();}
+      cancelAnimationFrame(this.frame);this.observer.disconnect();
       document.removeEventListener('visibilitychange',this.onVisibility);
       document.removeEventListener('fullscreenchange',this.onFullscreen);this.root.remove();
     }

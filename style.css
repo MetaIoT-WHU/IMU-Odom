@@ -290,3 +290,16 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
  .track-controls{gap:6px}
  .track-controls button{font-size:12px;padding:5px 7px}
 }
+
+.track-plan{position:relative;aspect-ratio:640/445}
+.track-plan>img,.track-plan>svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.track-plan>img:not([src]){visibility:hidden}
+.camera-inset{position:relative;width:min(48%,260px);margin:4px auto 7px;overflow:hidden;border-radius:6px;background:#eff3f5;aspect-ratio:4/3}
+.track-camera{width:100%;height:100%;display:block;object-fit:contain}
+.camera-inset span{position:absolute;left:5px;bottom:5px;background:#172a39b8;color:white;font-size:11px;line-height:1.6;border-radius:3px;padding:0 5px}
+.has-camera .track-panels{align-items:center}
+.has-camera .track-panels figure:nth-child(2)>svg{max-height:clamp(205px,22cqw,375px)}
+@container(max-width:620px){
+ .camera-inset{width:min(50%,215px);margin-top:8px}
+ .has-camera .track-panels figure:nth-child(2)>svg{max-height:300px}
+}
