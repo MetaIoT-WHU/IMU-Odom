@@ -233,3 +233,14 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
 .player-legend li{display:inline-flex;align-items:center;gap:6px}
 .player-legend li::before{content:"";width:19px;height:3px;background:var(--stroke);border-radius:2px}
 @media(max-width:720px){.player-legend{display:flex}.scene-card-heading .assistance-label{display:none}}
+
+.hero-heading{padding-bottom:12px}
+.method-intro{max-width:56em;margin:0 auto 25px;text-align:center;text-wrap:pretty;color:#405769;font-size:clamp(15px,1.25vw,18px);line-height:1.75}
+.live-label,.segmented button{font-size:clamp(14px,1.3vw,18px);font-weight:500}
+.card-meta{flex-wrap:wrap;gap:6px 12px;font-size:clamp(15px,1.25vw,18px);line-height:1.6;color:#344c61}
+.card-meta>span{font-weight:600;font-variant-numeric:tabular-nums}
+.card-meta a{font-size:14px}
+.section-note,.gallery-main>.section-note{font-size:clamp(14px,1.15vw,17px);color:#4b6377;line-height:1.7}
+.scene-card-heading .assistance-label,.large-stage .pill{font-size:13px}
+@media(max-width:700px){.segmented button{padding:7px 9px}.method-intro{text-align:left;margin-bottom:17px}.large-stage .stage-heading{flex-wrap:wrap}.card-meta{padding:10px 12px}.vivo-section h2{max-width:none}}
+.satellite-layer{position:absolute;pointer-events:none;background-size:100% 100%;background-repeat:no-repeat}

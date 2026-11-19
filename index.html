@@ -24,6 +24,7 @@
       <div class="hero-heading">
         <h1 id="hero-title">运动手表<span class="hero-accent">轨迹实测</span></h1>
       </div>
+      <p class="method-intro">我们从手表连续记录的惯性信号中估计行进速度与方向，再把每段位移连成轨迹。即使定位观测稀疏，也能连续呈现行走、转弯和往返的过程。</p>
       <div class="hero-stage">
         <div class="stage-heading"><span class="live-label"><i></i> 精选现场</span><div id="hero-tabs" class="segmented" aria-label="精选场景"></div></div>
         <div id="hero-player"></div>
@@ -33,7 +34,7 @@
     <section id="small" class="section wrap" aria-labelledby="small-title">
       <div class="section-heading"><h2 id="small-title">小尺度行走</h2></div>
       <div class="small-grid" id="small-grid"></div>
-      <p class="section-note">视频使用参考轨迹对齐展示坐标。</p>
+      <p class="section-note">操场和楼内两段行走测试中，加入稀疏参考位置后，位置均方根误差均降低约三成。</p>
     </section>
 
     <section id="large" class="section large-section" aria-labelledby="large-title"><div class="wrap">
@@ -53,9 +54,9 @@
     </section>
 
     <section id="vivo" class="section vivo-section" aria-labelledby="vivo-title"><div class="wrap">
-      <div class="section-heading"><h2 id="vivo-title">VIVO 无真值实测</h2><span class="vivo-total">31<span> 个场景</span></span></div>
+      <div class="section-heading"><h2 id="vivo-title">VIVO 场景实测效果</h2><span class="vivo-total">31<span> 个场景</span></span></div>
       <div class="vivo-workspace"><div class="vivo-stage"><div class="stage-heading"><span id="vivo-name">场景 A01</span><span class="pill neutral">无真值</span></div><div id="vivo-player"></div></div><aside class="vivo-sidebar"><div class="vivo-sidebar-heading"><h3>选择场景</h3><span id="vivo-count">全部 31 组</span></div><div id="vivo-filters" class="filter-row" aria-label="筛选 VIVO 分组"></div><div id="vivo-list" class="vivo-list" aria-label="VIVO 场景列表"></div><div class="vivo-bottom"><button id="vivo-prev" aria-label="上一个 VIVO 场景">← 上一个</button><button id="vivo-next" aria-label="下一个 VIVO 场景">下一个 →</button></div></aside></div>
-      <p class="section-note">31 组 VIVO 测试记录，使用冻结模型仅凭手表 IMU 推理。采样中断的片段各自从局部原点显示。</p>
+      <p class="section-note">按采集时间回放 31 组测试轨迹。右侧速度由相邻位置随时间的变化计算。</p>
     </div></section>
   </main>
   <footer class="site-footer wrap"><a class="brand" href="#top"><img src="assets/mark.svg" width="28" height="28" alt=""><strong>迹<span>运动轨迹</span></strong></a><a class="back-top" href="#top">回到顶部 ↑</a></footer>

@@ -32,6 +32,83 @@
     }
     return list;
   }
+  // The photograph stays at native resolution. Only the transparent route overlay is redrawn.
+  function attachSatelliteMap(frame, video, scene) {
+    const {src, rect, coords, fps} = scene.mapLayer;
+    const canvas = el('canvas','satellite-layer');
+    canvas.setAttribute('aria-hidden','true');
+    canvas.hidden = true;
+    frame.append(canvas);
+    const image = new Image();
+    const t = scene.series.t;
+    const context = canvas.getContext('2d');
+    let callback = null;
+    let closed = false;
+    function paint(mediaTime = video.currentTime) {
+      if (closed || !image.naturalWidth || video.readyState < 2 || !video.videoWidth) {
+        canvas.hidden = true;
+        return;
+      }
+      const width = frame.clientWidth, height = frame.clientHeight;
+      if (!width || !height) return;
+      const scale = Math.min(width / 1920, height / 1080);
+      const [x,y,w,h] = rect;
+      const pixelScale = Math.min(window.devicePixelRatio || 1, 3);
+      const cw = Math.max(1, Math.round(w*scale*pixelScale));
+      const ch = Math.max(1, Math.round(h*scale*pixelScale));
+      canvas.style.left = ((width-1920*scale)/2+x*scale)+'px';
+      canvas.style.top = ((height-1080*scale)/2+y*scale)+'px';
+      canvas.style.width = w*scale+'px';
+      canvas.style.height = h*scale+'px';
+      if (canvas.width !== cw || canvas.height !== ch) {canvas.width=cw;canvas.height=ch;}
+      context.setTransform(cw/w,0,0,ch/h,0,0);
+      context.clearRect(0,0,w,h);
+      const end = t[t.length-1]*Math.min(1,mediaTime/(scene.duration-1/fps));
+      for (const {id,color} of scene.legend) {
+        const points = coords[id];
+        context.beginPath();
+        let tip;
+        for (let i=0;i<t.length && t[i]<=end;i++) {
+          const [px,py] = points[i];
+          tip = [px*w,py*h];
+          if (!i || t[i]-t[i-1]>scene.series.gapThresholdS) context.moveTo(...tip);
+          else context.lineTo(...tip);
+          if (i+1<t.length && end<t[i+1] && t[i+1]-t[i]<=scene.series.gapThresholdS) {
+            const f=(end-t[i])/(t[i+1]-t[i]);
+            tip=[(px+(points[i+1][0]-px)*f)*w,(py+(points[i+1][1]-py)*f)*h];
+            context.lineTo(...tip);
+          }
+        }
+        context.lineJoin='round';context.lineCap='round';
+        context.strokeStyle='#313438';context.lineWidth=7;context.stroke();
+        context.strokeStyle=color;context.lineWidth=4;context.stroke();
+        if (tip) {
+          context.beginPath();context.arc(...tip,5,0,2*Math.PI);context.fillStyle=color;context.fill();
+          context.lineWidth=1.5;context.strokeStyle='#fff';context.stroke();
+        }
+      }
+      canvas.hidden=false;
+    }
+    function onFrame(_, info) {
+      if (closed) return;
+      paint(info.mediaTime);
+      callback=video.requestVideoFrameCallback(onFrame);
+    }
+    const repaint = () => paint();
+    const observer = new ResizeObserver(repaint);
+    observer.observe(frame);
+    const events = ['emptied','loadeddata','seeked'];
+    if ('requestVideoFrameCallback' in video) callback=video.requestVideoFrameCallback(onFrame);
+    else events.push('timeupdate');
+    events.forEach(name => video.addEventListener(name,repaint));
+    image.onload=()=>{canvas.style.backgroundImage='url("'+src+'")';paint();};
+    image.src=src;
+    return () => {
+      closed=true;observer.disconnect();image.onload=null;
+      if (callback !== null) video.cancelVideoFrameCallback(callback);
+      events.forEach(name=>video.removeEventListener(name,repaint));
+    };
+  }
   function makePlayer(host, item, opts = {}) {
     opts = {autoplay:true, ...opts};
     if (host._player) {
@@ -53,6 +130,7 @@
     video.setAttribute('aria-label', `${item.title}，动态轨迹视频`);
     video.controls = false;
     frame.append(video);
+    const releaseMap = item.mapLayer ? attachSatelliteMap(frame, video, item) : null;
     const hint = el('span', 'playing-indicator', '双击画面放大');
     frame.append(hint);
     const bar = el('div', 'player-controls');
@@ -204,6 +282,7 @@
     }, {threshold: .25});
     observer.observe(root);
     function destroy() {
+      if (releaseMap) releaseMap();
       observer.disconnect(); closeTheater(); video.pause();
       video.removeAttribute('src'); video.load(); players.delete(state);
     }
