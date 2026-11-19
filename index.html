@@ -9,7 +9,7 @@
   <title>运动手表轨迹实测 · 武汉大学 MetaIoT 实验室</title>
   <link rel="icon" href="assets/metaiot.jpg" type="image/jpeg">
   <link rel="stylesheet" href="leaflet/leaflet.css">
-  <link rel="stylesheet" href="style.css?v=header-logos-2">
+  <link rel="stylesheet" href="style.css?v=main-test-1">
   <script src="data.js?v=camera-cdn-1" defer></script>
   <script src="gallery.js" defer></script>
   <script src="sparse.js?v=pan-1" defer></script>
@@ -61,16 +61,17 @@
       <section id="results" class="results-strip" aria-labelledby="results-title">
         <h2 id="results-title">两种自研方法</h2>
         <div id="method" class="method-grid">
-          <article><h3>纯 IMU 里程计</h3><p>对齐腕部姿态、识别摆臂周期，用多尺度记忆估计速度与方向。</p><div class="method-score"><b>0.72 米</b><span>10 条路线 · 1 秒相对位移均方根误差均值</span></div></article>
-          <article><h3>稀疏 GNSS 辅助里程计</h3><p>在惯性轨迹上联合优化速度与稀疏位置观测，校正长距离漂移。</p><div class="method-score"><b>5.95 米</b><span>8 条室外路线 · 全程位置均方根误差均值</span></div></article>
+          <article><h3>纯 IMU 里程计</h3><div class="method-score"><b>5.42%</b><span>平均里程误差</span></div><p>从腕部摆动中估计速度和方向，仅靠手表惯性传感器累计里程。</p></article>
+          <article><h3>稀疏 GNSS 辅助里程计</h3><div class="method-score"><b>8.18 米</b><span>平均位置 RMSE</span></div><p>每 30 或 60 秒引入一次位置观测，校正惯性轨迹的累计漂移。</p></article>
         </div>
-        <table class="result-table"><caption>轨迹画廊 · 全程位置均方根误差的路线平均值（米）</caption>
-          <thead><tr><th scope="col">路线范围</th><th scope="col">纯 IMU</th><th scope="col">稀疏 GNSS</th><th scope="col">均值降幅</th></tr></thead>
-          <tbody><tr><th scope="row">画廊全部<small>10 条</small></th><td>37.59</td><td>—</td><td>—</td></tr>
-<tr><th scope="row">室外<small>8 条</small></th><td>45.99</td><td>5.95</td><td><strong>87.1%</strong></td></tr>
-<tr><th scope="row">室内<small>2 条</small></th><td>4.00</td><td>—</td><td>—</td></tr></tbody>
+        <table class="result-table"><caption>Apple Watch 主测 · 两组各自的逐记录均值</caption>
+          <thead><tr><th scope="col">误差指标</th><th scope="col">纯 IMU<small>5 条</small></th><th scope="col">稀疏 GNSS<small>6 条</small></th></tr></thead>
+          <tbody><tr><th scope="row">总里程相对误差</th><td>5.42%</td><td>3.93%</td></tr>
+<tr><th scope="row">10 秒相对位移 RMSE</th><td>5.41 米</td><td>5.63 米</td></tr>
+<tr><th scope="row">全程位置 RMSE</th><td>74.60 米</td><td>8.18 米</td></tr></tbody>
         </table>
-        <p class="result-note">每条路线等权，按参考轨迹对齐。仅 8 条室外路线有 GNSS 对比，稀疏观测与评估真值同源。 <a href="#gallery">查看轨迹画廊 ↗</a></p>
+        <p class="paired-result">画廊 8 条室外路线逐条对比：加入稀疏 GNSS 后，平均位置 RMSE 从 45.99 米降至 5.95 米，<strong>降低 87.1%</strong>。 <a href="#gallery">查看轨迹 ↗</a></p>
+        <details class="result-note"><summary>统计口径与自采数据覆盖</summary><p>自采 114 条设备记录，96 条有可核验预测，18 条缺预测。96 条含训练与质量检查记录，逐记录中位数为里程误差 8.99%、10 秒相对位移 RMSE 7.20 米。</p><p>上表取报告中全部 11 条主测记录，每条按归档预测归入一种方法。两列的路线不同；降幅仅按画廊中同路线的配对结果计算。稀疏位置观测与评估参考同源。RMSE 为均方根误差。</p></details>
       </section>
       <div class="hero-stage">
         <div class="stage-heading"><span class="live-label"><i></i> 精选现场</span><div id="hero-tabs" class="segmented" aria-label="精选场景"></div></div>

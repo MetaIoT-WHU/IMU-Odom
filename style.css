@@ -406,8 +406,12 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
 .method-score b{color:#09638a;font:650 clamp(21px,2.1vw,30px)/1.12 system-ui,sans-serif}
 .method-grid article+article .method-score b{color:#a43850}
 .method-score span{font-size:12px;color:#475e6a}
-.result-note a{color:#09638a;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
-.result-table tbody tr:first-child{background:#edf7f5}
+.paired-result a{color:#09638a;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.paired-result{margin:12px 0 0;padding:10px 12px;background:#edf7f5;border-radius:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.6}
+.paired-result strong{color:#067362}
+.result-note summary{cursor:pointer;width:fit-content}
+.result-note p{margin:5px 0;line-height:1.6}
+.result-table thead small{font-size:inherit;margin-left:6px}
 .result-table tbody th:first-child{padding-left:8px}
 .result-note{margin:7px 0 0;font-size:12px;color:#546976}
 .map-credit{position:absolute;bottom:3px;right:4px;z-index:2;color:#fff;background:#162932d9;font:11px/1.4 system-ui,sans-serif;padding:1px 5px;border-radius:2px;pointer-events:none}
