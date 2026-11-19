@@ -220,7 +220,10 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
 .site-header .brand{justify-self:start}
 .site-header nav{grid-column:2;align-items:center;justify-content:center;gap:clamp(24px,3.5vw,60px)}
 .site-header nav a{display:inline-flex;min-height:44px;align-items:center;font-size:clamp(18px,1.55vw,23px);font-weight:600}
-.hero-heading{justify-content:center;text-align:center}
+.hero-heading{flex-direction:column;justify-content:center;text-align:center;gap:6px}
+.lab-owner{display:inline-flex;align-items:center;gap:5px;color:#235d48;font-size:15px;font-weight:600}
+.lab-owner:hover{text-decoration:underline}
+.lab-owner img{display:block}
 @media(max-width:700px){
  .site-header{display:flex;justify-content:center;padding:0 6px;height:58px}
  .site-header>.brand{display:none}
