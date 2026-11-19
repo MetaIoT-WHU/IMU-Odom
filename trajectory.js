@@ -224,7 +224,7 @@
         this.frame=0;
         if(!active())return;
         if(cameraAvailable()){
-          if(!camera.seeking)this.time=Math.min(1,camera.currentTime/cameraSpan)*this.end;
+          if(camera.readyState>=HTMLMediaElement.HAVE_CURRENT_DATA && !camera.seeking)this.time=Math.min(1,camera.currentTime/cameraSpan)*this.end;
         }else if(this.last){
           const step=Math.min(now-this.last,200)/1000*this.end/item.duration*this.rate;
           if(item.segments && this.time+step>=this.end){
@@ -248,7 +248,11 @@
       if(camera){
         camera.onerror=()=>{
           if(this.closed)return;
-          camera.parentElement.querySelector('span').textContent='实拍暂不可用';
+          if(camera.getAttribute('src')===item.camera.cdnSrc){
+            camera.src=item.camera.src;
+          }else{
+            camera.parentElement.querySelector('span').textContent='实拍暂不可用';
+          }
           schedule();
         };
         camera.onloadedmetadata=()=>{
@@ -260,7 +264,10 @@
       const start=async()=>{
         if(this.started || this.closed)return;
         this.started=true;retry.hidden=true;out.value=image?'底图加载中…':'轨迹加载中…';
-        if(camera && !camera.hasAttribute('src'))camera.src=item.camera.src;
+        if(camera && !camera.hasAttribute('src')){
+          const online=/^https?:$/.test(location.protocol) && navigator.onLine;
+          camera.src=(online && item.camera.cdnSrc) || item.camera.src;
+        }
         try{
           const [d]=await Promise.all([load(item),image?window.showcaseMapReady(image,item.mapLayer):null]);
           if(this.closed)return;
