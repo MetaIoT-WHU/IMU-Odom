@@ -51,7 +51,10 @@
     text.append(el('p','assistance-label',auxiliaryLabel(s)));
     const host = el('div');
     const meta = el('div', 'card-meta');
-    meta.append(el('span','',`${s.anchorCount} 个${s.gnssAdded?' GNSS ':'视觉'}点 · 位置均方根误差 ${s.errorBefore.toFixed(2)} → ${s.errorAfter.toFixed(2)} 米`)); 
+    const errorSummary=s.gnssAdded
+      ? `${s.anchorCount} 个 GNSS 点 · 位置均方根误差 ${s.errorBefore.toFixed(2)} → ${s.errorAfter.toFixed(2)} 米`
+      : `纯 IMU 位置均方根误差 ${s.errorBefore.toFixed(2)} 米 · 红线仅作参考点校正演示`;
+    meta.append(el('span','',errorSummary));
     card.append(heading, host, meta); $('#small-grid').append(card); makePlayer(host, s);
   });
   const largeButtons = new Map();
@@ -113,7 +116,7 @@
     const host = $('#gallery-list'); host.replaceChildren();
     galleryVisible = data.gallery.filter(id => {
       const s = data.scenes[id];
-      return (galleryFilter === '全部' || s.location === galleryFilter || (galleryFilter==='视觉辅助'&&!s.gnssAdded) || (galleryFilter==='GNSS 辅助'&&s.gnssAdded)) && `${s.title}${s.subtitle}${s.description}${auxiliaryLabel(s)}`.includes(galleryQuery);
+      return (galleryFilter === '全部' || s.location === galleryFilter || (galleryFilter==='参考点校正'&&!s.gnssAdded) || (galleryFilter==='GNSS 辅助'&&s.gnssAdded)) && `${s.title}${s.subtitle}${s.description}${auxiliaryLabel(s)}`.includes(galleryQuery);
     });
     $('#gallery-count').textContent = `${galleryVisible.length} 条精选路线`;
     $('#gallery-prev').disabled = galleryVisible.length < 2;
@@ -128,8 +131,8 @@
       b.append(number, text); b.addEventListener('click', () => selectGallery(id)); host.append(b);
     });
   }
-  ['全部', '室外', '室内', '视觉辅助', 'GNSS 辅助'].forEach(name => {
-    const count=data.gallery.filter(id=>name==='全部'||data.scenes[id].location===name||(name==='视觉辅助'&&!data.scenes[id].gnssAdded)||(name==='GNSS 辅助'&&data.scenes[id].gnssAdded)).length;
+  ['全部', '室外', '室内', '参考点校正', 'GNSS 辅助'].forEach(name => {
+    const count=data.gallery.filter(id=>name==='全部'||data.scenes[id].location===name||(name==='参考点校正'&&!data.scenes[id].gnssAdded)||(name==='GNSS 辅助'&&data.scenes[id].gnssAdded)).length;
     const b = el('button', '', `${name} ${count}`); b.type = 'button';
     b.addEventListener('click', () => {
       galleryFilter = name; pressed(galleryFilterButtons, name); drawGalleryList();

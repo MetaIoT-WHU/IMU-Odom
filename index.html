@@ -9,14 +9,14 @@
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="leaflet/leaflet.css">
   <link rel="stylesheet" href="style.css?v=gallery-mean-1">
-  <script src="data.js?v=track-walk-10m" defer></script>
+  <script src="data.js?v=gnss-scope-1" defer></script>
   <script src="gallery.js" defer></script>
   <script src="sparse.js?v=pan-1" defer></script>
   <script src="leaflet/leaflet.js" defer></script>
   <script src="maps.js?v=track-walk-10m" defer></script>
   <script src="trajectory.js?v=pan-1" defer></script>
   <script src="expedition.js?v=pan-1" defer></script>
-  <script src="app.js?v=lab-1" defer></script>
+  <script src="app.js?v=gnss-scope-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#small">跳到效果展示</a>
@@ -58,12 +58,12 @@
           <article><h3>稀疏 GNSS 辅助里程计</h3><p>在惯性轨迹上联合优化速度与稀疏位置观测，校正长距离漂移。</p><div class="method-score"><b>5.95 米</b><span>8 条室外路线 · 全程位置均方根误差均值</span></div></article>
         </div>
         <table class="result-table"><caption>轨迹画廊 · 全程位置均方根误差的路线平均值（米）</caption>
-          <thead><tr><th scope="col">路线范围</th><th scope="col">纯 IMU</th><th scope="col">位置辅助</th><th scope="col">均值降幅</th></tr></thead>
-          <tbody><tr><th scope="row">画廊全部<small>10 条</small></th><td>37.59</td><td>5.30</td><td><strong>85.9%</strong></td></tr>
-<tr><th scope="row">室外 · GNSS 辅助<small>8 条</small></th><td>45.99</td><td>5.95</td><td><strong>87.1%</strong></td></tr>
-<tr><th scope="row">室内 · 视觉辅助<small>2 条</small></th><td>4.00</td><td>2.70</td><td><strong>32.5%</strong></td></tr></tbody>
+          <thead><tr><th scope="col">路线范围</th><th scope="col">纯 IMU</th><th scope="col">稀疏 GNSS</th><th scope="col">均值降幅</th></tr></thead>
+          <tbody><tr><th scope="row">画廊全部<small>10 条</small></th><td>37.59</td><td>—</td><td>—</td></tr>
+<tr><th scope="row">室外<small>8 条</small></th><td>45.99</td><td>5.95</td><td><strong>87.1%</strong></td></tr>
+<tr><th scope="row">室内<small>2 条</small></th><td>4.00</td><td>—</td><td>—</td></tr></tbody>
         </table>
-        <p class="result-note">每条路线等权，降幅按两组均值计算。沿用参考轨迹对齐。离线校正的稀疏观测与评估真值同源。 <a href="#gallery">查看轨迹画廊 ↗</a></p>
+        <p class="result-note">每条路线等权，按参考轨迹对齐。仅 8 条室外路线有 GNSS 对比，稀疏观测与评估真值同源。 <a href="#gallery">查看轨迹画廊 ↗</a></p>
       </section>
       <div class="hero-stage">
         <div class="stage-heading"><span class="live-label"><i></i> 精选现场</span><div id="hero-tabs" class="segmented" aria-label="精选场景"></div></div>
@@ -75,7 +75,7 @@
     <section id="small" class="section wrap" aria-labelledby="small-title">
       <div class="section-heading"><h2 id="small-title">小尺度行走</h2></div>
       <div class="small-grid" id="small-grid"></div>
-      <p class="section-note">操场和楼内两段行走测试中，加入稀疏参考位置后，位置均方根误差均降低约三成。</p>
+      <p class="section-note">操场漫步加入 3 个稀疏 GNSS 点后，全程位置均方根误差由 2.11 米降至 1.45 米。</p>
     </section>
 
     <section id="large" class="section large-section" aria-labelledby="large-title"><div class="wrap">
