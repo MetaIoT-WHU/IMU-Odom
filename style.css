@@ -404,3 +404,40 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
 .map-route path{vector-effect:non-scaling-stroke}
 .map-route circle:not(.exp-fix-symbol circle){transform-box:fill-box;transform-origin:center;scale:var(--marker-scale,1)}
 .map-route .exp-fix-symbol{scale:var(--marker-scale,1)}
+
+.platform{padding-bottom:8px}
+.platform .section-heading{margin-bottom:19px}
+.platform-cards{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(12px,2vw,26px)}
+.platform-cards article{min-width:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.platform-rig{aspect-ratio:2/1}
+.platform-watches{aspect-ratio:2/1.35}
+.platform-rig{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:repeat(2,minmax(0,1fr));gap:3px;background:#fff}
+.platform-rig a:first-child{grid-row:span 2}
+.platform-cards a{display:block;min-height:0;min-width:0;cursor:zoom-in}
+.platform-cards a:focus-visible{outline-offset:-3px}
+.platform-rig img{width:100%;height:100%;object-fit:cover}
+.platform-watches{display:flex;justify-content:center;align-items:stretch;gap:clamp(10px,2vw,30px);padding:clamp(12px,1.65vw,26px);background:#14191c}
+.platform-watches figure{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:5px;min-width:0;flex:1;max-width:230px;margin:0}
+.platform-watches img{height:100%;width:100%;object-fit:contain}
+.platform-watches figcaption{text-align:center;color:#ecf1f3;font:550 13px/1.5 system-ui,sans-serif}
+.platform-copy{padding:15px clamp(14px,1.65vw,24px) 17px}
+.platform-copy h3{font-size:clamp(17px,1.5vw,22px)}
+.platform-copy p,.platform-note{margin:6px 0 0;line-height:1.65;font-size:14px;color:#516674}
+.platform-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 8px}
+.platform-counts div{border-left:2px solid #96ceca;padding:1px 0 0 12px}
+.platform-counts dt{font-size:13px;color:#506775}
+.platform-counts dd{color:#116b64;font:650 clamp(22px,2.6vw,36px)/1.22 system-ui,sans-serif;margin:1px 0 0;font-variant-numeric:tabular-nums}
+.platform-counts small{font:500 13px/1.2 Showcase,sans-serif}
+.platform-note{font-size:13px}
+.platform-preview{border:0;border-radius:12px;padding:12px;max-width:min(94vw,1050px);background:#fff;color:#20354a}
+.platform-preview::backdrop{background:#0c1d28c9}
+.platform-preview form{display:flex;justify-content:flex-end;margin:0 0 7px}
+.platform-preview button{padding:5px 12px;border-radius:5px;background:#edf4f6}
+.platform-preview img{width:auto;max-width:100%;max-height:72vh;margin:auto;object-fit:contain}
+.platform-preview p{margin:7px 0 0;text-align:center;font-size:14px}
+@media(max-width:720px){
+ .platform-cards{grid-template-columns:1fr}
+ .platform-watches{aspect-ratio:auto;height:185px}
+ .platform-counts{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .platform-copy p,.platform-note{font-size:13px}
+}

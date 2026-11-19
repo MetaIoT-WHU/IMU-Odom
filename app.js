@@ -205,6 +205,22 @@
   }
   $('#vivo-prev').addEventListener('click', () => moveVivo(-1));
   $('#vivo-next').addEventListener('click', () => moveVivo(1));
+  const preview = $('.platform-preview');
+  if (typeof preview.showModal === 'function') {
+    for (const link of document.querySelectorAll('.platform-cards a')) {
+      link.addEventListener('click', event => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        const photo = link.querySelector('img');
+        preview.querySelector('img').src = link.href;
+        $('#platform-caption').textContent = photo.alt;
+        preview.showModal();
+      });
+    }
+    preview.addEventListener('click', event => {
+      if (event.target === preview) preview.close();
+    });
+  }
   const sections = [...document.querySelectorAll('main>section[id]')];
   const links = [...document.querySelectorAll('.site-header nav a')];
   const navObserver = new IntersectionObserver(entries => {
