@@ -209,21 +209,33 @@
   $('#vivo-prev').addEventListener('click', () => moveVivo(-1));
   $('#vivo-next').addEventListener('click', () => moveVivo(1));
   const preview = $('.platform-preview');
-  if (typeof preview.showModal === 'function') {
-    for (const link of document.querySelectorAll('.platform-cards a')) {
+  const previewImage = preview.querySelector('img');
+  const online = /^https?:$/.test(location.protocol) && navigator.onLine;
+  for (const link of document.querySelectorAll('.platform-cards a')) {
+    const photo = link.querySelector('img');
+    const local = link.href;
+    if (online) link.href = link.dataset.cdn;
+    function useLocal() {
+      link.href = local;
+      if (photo.src !== local) photo.src = local;
+      if (previewImage.src === link.dataset.cdn) previewImage.src = local;
+    }
+    photo.addEventListener('error', useLocal, {once:true});
+    photo.src = link.href;
+    if (typeof preview.showModal === 'function') {
       link.addEventListener('click', event => {
         if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
-        const photo = link.querySelector('img');
-        preview.querySelector('img').src = link.href;
+        previewImage.onerror = useLocal;
+        previewImage.src = link.href;
         $('#platform-caption').textContent = photo.alt;
         preview.showModal();
       });
     }
-    preview.addEventListener('click', event => {
-      if (event.target === preview) preview.close();
-    });
   }
+  preview.addEventListener('click', event => {
+    if (event.target === preview) preview.close();
+  });
   const sections = [...document.querySelectorAll('main>section[id]')];
   const links = [...document.querySelectorAll('.site-header nav a')];
   const navObserver = new IntersectionObserver(entries => {
