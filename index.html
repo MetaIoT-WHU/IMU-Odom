@@ -8,16 +8,64 @@
   <meta name="author" content="武汉大学 MetaIoT 实验室">
   <title>运动手表轨迹实测 · 武汉大学 MetaIoT 实验室</title>
   <link rel="icon" href="assets/metaiot.jpg" type="image/jpeg">
-  <link rel="stylesheet" href="leaflet/leaflet.css">
-  <link rel="stylesheet" href="style.css?v=main-test-1">
-  <script src="data.js?v=camera-cdn-1" defer></script>
-  <script src="gallery.js" defer></script>
-  <script src="sparse.js?v=pan-1" defer></script>
-  <script src="leaflet/leaflet.js" defer></script>
-  <script src="maps.js?v=track-walk-10m" defer></script>
-  <script src="trajectory.js?v=camera-cdn-1" defer></script>
-  <script src="expedition.js?v=pan-1" defer></script>
-  <script src="app.js?v=platform-cdn-1" defer></script>
+  <noscript><link rel="stylesheet" href="style.css"></noscript>
+  <script>
+    (() => {
+      const online = /^https?:$/.test(location.protocol) && navigator.onLine;
+      const assets = {
+        "leaflet/leaflet.css": "sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H",
+        "style.css": "sha384-Zzb4KORa9SRRkmawSJ78k4FvZP7Ftx3BiZJRRY0Q6nPHUWRlzpGrF8KE/12NU8mJ",
+        "data.js": "sha384-9cS27rHvSX0J3D+7r3b1B+AmZhRYJaphWM9/08G/qb1vWbsdrCWl8DilXtYTjL3/",
+        "gallery.js": "sha384-0kmHAIC8YtJy73a9sAUU9wsxluv8uYciP+YORI91J2uNUMT3EOjLt2qCiiRC1RMI",
+        "sparse.js": "sha384-6uAL4H357vuMbI22W3CaCZcQTo6XORxOcE5DmfL8iqQfVGh1/X4CjDD3NZtL0Jo0",
+        "leaflet/leaflet.js": "sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH",
+        "maps.js": "sha384-TVt4JZKo68tAfMk78w2NqtD+Ah7YtyCJYYgQO7rKUoIygeIkk1+maOt7KECDf+Wm",
+        "trajectory.js": "sha384-YKM//btpE3NFNDig8gGsg2OXnvb4kTXH9FW2L30iI0c7RWJqOQn+POm04DwMeCac",
+        "expedition.js": "sha384-DXtjehRkjihlme0+SXh45R+l6tyQxTtOc+zn7bJFOSWVxzqAbUam6K4KUkjFQAET",
+        "app.js": "sha384-l/7jYEwuJCFaqlwH7wNEI2sjq4+5L9Vpr00dgFC10X3S7p88P4T1dOfceF7gBy/H"
+};
+      const project = 'https://jsd.onmicrosoft.cn/gh/MetaIoT-WHU/IMU-Odom@2620a7ad0523f50412e273f6ed9d9402082a4b19/';
+      const leaflet = 'https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/';
+      const bootstrap = document.currentScript;
+      function load(path) {
+        const css = path.endsWith('.css');
+        const attr = css ? 'href' : 'src';
+        const local = path + '?v=' + encodeURIComponent(assets[path].slice(7, 19));
+        function request(remote) {
+          return new Promise((resolve, reject) => {
+            const node = document.createElement(css ? 'link' : 'script');
+            if (css) {
+              node.rel = 'stylesheet';
+              node.setAttribute('blocking', 'render');
+            }
+            node.onload = resolve;
+            node.onerror = () => { node.remove(); reject(new Error(path)); };
+            if (remote) {
+              node.crossOrigin = 'anonymous';
+              node.integrity = assets[path];
+              node[attr] = path.startsWith('leaflet/') ? leaflet + path.slice(8) : project + path;
+            } else {
+              node[attr] = local;
+            }
+            // Keep the library stylesheet before the site's overrides, including on retry.
+            if (path === 'leaflet/leaflet.css') bootstrap.before(node);
+            else document.head.append(node);
+          });
+        }
+        return online ? request(true).catch(() => request(false)) : request(false);
+      }
+
+      const font = 'assets/chinese.woff2';
+      const sources = online ? [project + font, font] : [font];
+      const face = document.createElement('style');
+      face.textContent = '@font-face{font-family:Showcase;font-weight:100 900;font-display:swap;src:' +
+        sources.map(url => 'url("' + url + '") format("woff2")').join(',') + '}';
+      document.head.append(face);
+      const ready = new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, {once:true}));
+      const dependencies = Object.keys(assets).filter(path => path !== 'app.js');
+      Promise.all([ready, ...dependencies.map(load)]).then(() => load('app.js'));
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#small">跳到效果展示</a>

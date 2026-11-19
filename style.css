@@ -1,4 +1,3 @@
-@font-face{font-family:Showcase;src:url('assets/chinese.woff2') format('woff2');font-weight:100 900;font-display:swap}
 :root{color-scheme:light;--bg:#fff;--surface:#f8fafc;--line:#dfe6ee;--muted:#728196;--text:#20354a;--cyan:#008ac7;--blue:#2589d5;--radius:14px}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:85px}
