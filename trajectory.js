@@ -47,7 +47,7 @@
     return Math.max(0,lo-1);
   }
   function commands(points,t,gap) {
-    return points.map((p,i)=>xy(p)?((i && xy(points[i-1]) && t[i]-t[i-1]<=gap)?'L':'M')+coord(p):'');
+    return points.map((p,i)=>xy(p)?((i && xy(points[i-1]) && t[i]>t[i-1] && t[i]-t[i-1]<=gap)?'L':'M')+coord(p):'');
   }
   function limits(columns) {
     let low=Infinity,high=-Infinity;
@@ -80,7 +80,7 @@
   }
   function space(view,data,item) {
     const map=item.mapLayer, styles=item.legend;
-    const width=640,height=445;
+    const width=640,height=view.viewBox.baseVal.height;
     let project;
     if(map){
       const [w,h]=map.nativeSize, k=Math.min(width/w,height/h);
@@ -186,6 +186,13 @@
       if(image){
         image.alt='卫星底图';image.decoding='async';plan.prepend(image);
       }
+      if(item.segments){
+        this.root.classList.add('exp-replay');
+        const [w,h]=item.mapLayer.nativeSize;
+        plan.style.aspectRatio=w+'/'+h;
+        route.setAttribute('viewBox','0 0 640 '+640*h/w);
+        get('figcaption').textContent='全程卫星图';
+      }
       const camera=item.camera?document.createElement('video'):null;
       if(camera){
         camera.className='track-camera';camera.muted=true;camera.defaultMuted=true;
@@ -208,7 +215,7 @@
         if(!this.data)return;
         const d=this.data,t=d.t,i=upper(t,this.time),dt=t[i+1]-t[i];
         this.space(i,dt>0 && dt<=d.gapThresholdS?(this.time-t[i])/dt:0);
-        this.motion(this.time/this.end);this.pose?.(this.time/this.end);
+        this.motion(this.time/this.end);this.segmentPanel?.(this.time);this.pose?.(this.time/this.end);
         out.value=clock(this.time)+' / '+clock(this.end);
         seek.value=Math.round(this.time/this.end*1000);seek.setAttribute('aria-valuetext',out.value);
       };
@@ -221,7 +228,12 @@
         if(cameraAvailable()){
           if(!camera.seeking)this.time=Math.min(1,camera.currentTime/cameraSpan)*this.end;
         }else if(this.last){
-          this.time=(this.time+Math.min(now-this.last,200)/1000*this.end/item.duration*this.rate)%this.end;
+          const step=Math.min(now-this.last,200)/1000*this.end/item.duration*this.rate;
+          if(item.segments && this.time+step>=this.end){
+            this.hold=(this.hold||0)+step;
+            this.time=this.hold<this.end*3/item.duration?this.end:0;
+            if(!this.time)this.hold=0;
+          }else this.time=(this.time+step)%this.end;
         }
         this.last=now;draw();this.frame=requestAnimationFrame(tick);
       };
@@ -255,6 +267,9 @@
           const [d]=await Promise.all([load(item),image?window.showcaseMapReady(image,item.mapLayer.src):null]);
           if(this.closed)return;
           this.space=space(route,d,item);this.motion=motion(signals,d,item);
+          if(item.segments)this.segmentPanel=window.eastlakePanel(this,item,d,route,signals,image,time=>{
+            this.time=time;this.last=0;this.hold=0;draw();
+          });
           if(d.pose)this.pose=watch(route,d.pose);
           this.data=d;this.end=d.t.at(-1);seek.disabled=false;draw();schedule();
         }catch{
@@ -269,7 +284,7 @@
       });this.observer.observe(this.root);
       play.onclick=()=>{this.play=!this.play;play.textContent=this.play?'暂停':'播放';schedule();};
       seek.oninput=()=>{
-        this.time=this.end*Number(seek.value)/1000;this.last=0;
+        this.time=this.end*Number(seek.value)/1000;this.last=0;this.hold=0;
         if(cameraAvailable() && camera.readyState)camera.currentTime=this.time/this.end*cameraSpan;
         draw();
       };

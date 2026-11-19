@@ -83,6 +83,7 @@
     largeButtons.set(id, b); $('#large-tabs').append(b);
   });
   selectLarge(data.large[0]);
+  makePlayer($('#eastlake-player'),data.ultra);
   let galleryFilter = '全部'; let galleryQuery = ''; let selectedGallery = data.gallery[0];
   const galleryFilterButtons = new Map(); let galleryVisible = [...data.gallery];
   let galleryCanvas = null;

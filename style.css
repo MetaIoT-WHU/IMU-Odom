@@ -303,3 +303,64 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
  .camera-inset{width:min(50%,215px);margin-top:8px}
  .has-camera .track-panels figure:nth-child(2)>svg{max-height:300px}
 }
+
+#eastlake{scroll-margin-top:85px;margin-top:clamp(36px,6vw,84px);background:#102329;color:#f1f6f5;border-radius:16px;overflow:hidden;padding:clamp(16px,2.4vw,34px);text-align:left}
+.exp-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid #385056}
+.exp-heading p{margin:0;color:#b4c7c9;font-size:clamp(12px,1vw,15px)}
+.exp-heading .exp-type{color:#9ddbd3;font-size:13px;letter-spacing:.08em}
+.exp-heading h2{font-size:clamp(28px,3.4vw,49px);font-weight:550;letter-spacing:-.035em;line-height:1.3;margin:7px 0 8px;color:white}
+.exp-heading h2 span{margin-left:8px;padding-left:16px;border-left:1px solid #466267;font-weight:650;font-variant-numeric:tabular-nums}
+.exp-heading h2 small{font-size:.62em}.exp-heading i{color:#709399;font-style:normal;margin:0 3px}
+.exp-policy{text-align:right;line-height:1.8}.exp-policy strong{color:#fafcfc;font-size:clamp(15px,1.45vw,21px)}
+.exp-replay{background:transparent;color:#ecf4f3;padding:0}
+.exp-replay .player-legend{background:transparent;color:#e2e9e9;justify-content:flex-start;padding:15px 0 18px;font-size:clamp(12px,1.1vw,15px)}
+.exp-replay .player-legend .star-key::before{content:"★";height:auto;width:auto;background:none;color:#f176b5;font-size:18px;line-height:1}
+.exp-replay .track-panels{grid-template-columns:minmax(0,1.27fr) minmax(0,1fr);align-items:start;gap:clamp(12px,2vw,28px)}
+.exp-replay .track-panels figure{margin:0}
+.exp-replay .track-panels figcaption,.exp-tabs{margin:0 0 9px;font-size:15px;height:29px;text-align:left;font-weight:550;color:#e4f0ef}
+.exp-tabs{display:flex;align-items:flex-start;gap:22px;border-bottom:1px solid #30464c}
+.exp-tabs button{height:29px;background:none;border:0;border-bottom:2px solid transparent;padding:0 0 6px;color:#9fb4b7;font:inherit;cursor:pointer}
+.exp-tabs button[aria-pressed=true]{color:white;border-bottom-color:#7addca}
+.exp-replay .track-plan{border-radius:6px;overflow:hidden;background:#142b32}
+.exp-segments{display:grid;gap:9px}
+.exp-segments[hidden]{display:none}
+.exp-segment{width:100%;display:grid;grid-template-columns:32% 1fr;align-items:center;text-align:left;gap:clamp(8px,1vw,16px);background:#1a333a;color:#eaf3f2;border:1px solid #28444b;border-radius:7px;overflow:hidden;padding:0;cursor:pointer}
+.exp-segment:hover,.exp-segment:focus-visible{border-color:#769f9c}
+.exp-segment[aria-current=true]{border-color:#6bd0c4;background:#204146}
+.segment-mini{display:block;width:100%;height:100%;object-fit:cover;min-height:76px}
+.seg-copy{min-width:0;display:grid;gap:4px;padding:8px 8px 8px 0}
+.seg-top,.seg-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg-index{color:#79ddcc;font-size:clamp(16px,1.5vw,22px);font-variant-numeric:tabular-nums}
+.seg-top strong{font-size:clamp(12px,1.05vw,15px);font-weight:550}
+.seg-clock,.seg-stats{color:#b9ced1;font-size:clamp(11px,.9vw,13px);font-variant-numeric:tabular-nums}
+.seg-stats b{color:#fff;font-weight:600}
+.exp-replay .track-panels figure:nth-child(2)>svg{border-radius:7px;background:white;max-height:none}
+.exp-replay .track-controls{margin-top:14px;border-color:#395159;color:#dce9e8}
+.exp-replay .track-controls button{border-color:#415e64;background:#1c373d;color:white}
+.exp-count{color:#ffb5da;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.exp-replay .track-controls input{accent-color:#73d7c6}
+.exp-note,.exp-details{margin:10px 0 0;font-size:12px;color:#bbccce;line-height:1.7}
+.exp-details summary{cursor:pointer}.exp-details p{margin:6px 0}
+.exp-replay:fullscreen,.exp-replay.expanded{background:#102329;padding:16px;display:block}
+.exp-replay:fullscreen .track-panels,.exp-replay.expanded .track-panels{max-width:min(100%,124vh)}
+@media(max-width:780px){
+ .exp-replay .track-panels{grid-template-columns:minmax(0,1fr)}
+ .exp-replay .track-plan{max-width:min(100%,64vh);margin:auto}
+ .exp-policy{display:none}.exp-heading{padding-bottom:14px}
+ .exp-segments{grid-template-columns:repeat(auto-fit,minmax(225px,1fr))}
+ .exp-replay .track-controls{flex-wrap:wrap}
+ .exp-replay .track-controls input{order:-1;flex-basis:100%}
+}
+.exp-summary{border-top:1px solid #395159;margin-top:16px;padding-top:13px}
+.exp-summary p{font-size:13px;color:#c7d9da;margin:0 0 8px}
+.exp-measure{display:grid;grid-template-columns:66px 1fr 82px;gap:10px;align-items:center;margin:5px 0;font-size:13px;color:#bacfd1}
+.exp-measure i{display:block;height:3px;background:linear-gradient(to right,var(--stroke) var(--fraction),#2c454c var(--fraction));border-radius:2px}
+.exp-measure b{font-variant-numeric:tabular-nums;text-align:right;color:#eef5f4}
+@media(max-width:780px){
+ .exp-replay{display:grid}
+ .exp-replay .track-panels{display:contents}
+ .exp-replay .player-legend{grid-row:1}
+ .exp-replay .track-panels figure:first-child{grid-row:2}
+ .exp-replay .track-controls{grid-row:3;margin:8px 0 12px}
+ .exp-replay .track-panels figure:nth-child(2){grid-row:4}
+}

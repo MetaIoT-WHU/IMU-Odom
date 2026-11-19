@@ -7,12 +7,13 @@
   <meta name="description" content="运动轨迹效果展示：室内与室外、小尺度与长距离，实景视频与轨迹动态对照。">
   <title>迹 · 运动轨迹效果展示</title>
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=map-camera-2">
-  <script src="data.js?v=map-camera-2" defer></script>
+  <link rel="stylesheet" href="style.css?v=eastlake-five-1">
+  <script src="data.js?v=eastlake-five-1" defer></script>
   <script src="gallery.js" defer></script>
-  <script src="sparse.js?v=map-camera-2" defer></script>
-  <script src="trajectory.js?v=map-camera-2" defer></script>
-  <script src="app.js?v=map-camera-2" defer></script>
+  <script src="sparse.js?v=eastlake-five-1" defer></script>
+  <script src="trajectory.js?v=eastlake-five-1" defer></script>
+  <script src="expedition.js" defer></script>
+  <script src="app.js?v=eastlake-five-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#small">跳到效果展示</a>
@@ -43,7 +44,17 @@
       <div class="section-heading"><h2 id="large-title">长距离路线</h2></div>
       <div class="large-tabs" id="large-tabs" aria-label="大尺度场景"></div>
       <div class="large-stage"><div class="stage-heading"><div><h3 id="large-name"></h3></div><span id="large-badge" class="pill"></span></div><div id="large-player"></div></div>
-      <div class="section-footer"><button type="button" id="large-history" hidden>查看历史回放</button><a href="#gallery" class="text-link">更多轨迹对照 <span>↗</span></a></div>
+      <div class="section-footer"><button type="button" id="large-history" hidden>查看历史回放</button><a href="#eastlake" class="text-link">东湖 20.01 km <span>↗</span></a></div>
+      <article id="eastlake" aria-labelledby="eastlake-title">
+        <header class="exp-heading">
+          <div><p class="exp-type">超大尺度 · 长距离拼接</p><h2 id="eastlake-title">武汉东湖 <span>20.01 <small>km</small></span></h2>
+          <p>2026 年 11 月 16 日 <i>／</i> Apple Watch AW1 <i>／</i> 五段跑步记录</p></div>
+          <p class="exp-policy">每段终点一次定位<br><strong>全程 5 个 GNSS 观测点</strong></p>
+        </header>
+        <div id="eastlake-player"></div>
+        <p class="exp-note">按采集顺序拼接，跳过段间停录。辅助曲线为五个段末观测的离线校正结果；段末误差取校正位置与同源观测的距离。</p>
+        <details class="exp-details"><summary>数据与对齐说明</summary><p>五段使用各自的惯性预测，第一段以参考路线对齐初始位置和航向，后续段继承上一段预测的末位姿。前两段在基准训练划分，后三段在测试划分，五段记录均未参与对应推理模型的训练。时间为北京时间，yaw 表示行进航向。</p></details>
+      </article>
     </div></section>
 
     <section id="gallery" class="section wrap" aria-labelledby="gallery-title">
