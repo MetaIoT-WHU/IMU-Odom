@@ -120,9 +120,12 @@
         if(entry.id==='fix')swatch.className='fix-key';
         label.append(swatch,entry.label);this.key.append(label);
       }
-      for (const {map,image,canvas} of this.views) {
-        image.removeAttribute('src');map.style.aspectRatio=scene.mapLayer.nativeSize.join('/');
-        canvas.width=canvas.width;
+      for (const view of this.views) {
+        const image=new Image();image.alt='卫星底图';image.decoding='async';
+        view.image.replaceWith(image);view.image=image;
+        view.map.querySelector('.map-credit')?.remove();
+        view.map.style.aspectRatio=scene.mapLayer.nativeSize.join('/');
+        view.canvas.width=view.canvas.width;
       }
       this.status.hidden=true;
       if(this.visible) this.load();
@@ -132,7 +135,7 @@
       const token=this.token, clip=this.clip, map=this.scene.mapLayer;
       this.loading=true;this.status.hidden=false;this.status.textContent='正在加载轨迹…';
       try {
-        const imageTasks=this.views.map(({image})=>window.showcaseMapReady(image,map.src));
+        const imageTasks=this.views.map(({image})=>window.showcaseMapReady(image,map));
         const [data]=await Promise.all([loadRoute(clip),...imageTasks]);
         if(token!==this.token)return;
         this.data=data;this.seek.disabled=false;

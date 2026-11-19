@@ -7,13 +7,13 @@
   <meta name="description" content="运动轨迹效果展示：室内与室外、小尺度与长距离，实景视频与轨迹动态对照。">
   <title>迹 · 运动轨迹效果展示</title>
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=showcase-summary-1">
-  <script src="data.js?v=eastlake-five-2" defer></script>
+  <link rel="stylesheet" href="style.css?v=two-methods-1">
+  <script src="data.js?v=two-methods-1" defer></script>
   <script src="gallery.js" defer></script>
-  <script src="sparse.js?v=eastlake-five-2" defer></script>
-  <script src="trajectory.js?v=eastlake-five-2" defer></script>
-  <script src="expedition.js?v=eastlake-five-2" defer></script>
-  <script src="app.js?v=showcase-summary-1" defer></script>
+  <script src="sparse.js?v=two-methods-1" defer></script>
+  <script src="trajectory.js?v=two-methods-1" defer></script>
+  <script src="expedition.js?v=two-methods-1" defer></script>
+  <script src="app.js?v=two-methods-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#small">跳到效果展示</a>
@@ -27,26 +27,24 @@
       <div class="hero-heading">
         <h1 id="hero-title">运动手表<span class="hero-accent">轨迹实测</span></h1>
       </div>
-      <p class="method-intro">从手腕的摆动中辨别行进方向，用连续惯性测量追踪运动，再用稀疏位置观测校正漂移。</p>
       <section id="results" class="results-strip" aria-labelledby="results-title">
-        <header><h2 id="results-title">精选路线 · 位置误差降幅</h2><a href="#method">查看三项方法创新 ↓</a></header>
-        <div class="result-grid"><a class="result-card" href="#eastlake"><span class="result-label"><b>东湖 20.01 km</b><span>5 个段末 GNSS 点</span></span><strong class="result-gain">80.2<small>%</small></strong><span class="result-pair">1425.1 → 282.3 米</span></a>
-<a class="result-card" href="#scene-outdoor-close"><span class="result-label"><b>操场漫步</b><span>3 个GNSS 点</span></span><strong class="result-gain">31.4<small>%</small></strong><span class="result-pair">2.11 → 1.45 米</span></a>
-<a class="result-card" href="#scene-indoor-close"><span class="result-label"><b>楼内行走</b><span>4 个视觉位置点</span></span><strong class="result-gain">29.4<small>%</small></strong><span class="result-pair">3.24 → 2.28 米</span></a></div>
-        <p class="result-note">数值为同一路线离线校正前后的全程位置均方根误差。辅助观测与评估真值同源。</p>
+        <h2 id="results-title">两种自研方法</h2>
+        <div id="method" class="method-grid">
+          <article><h3>纯 IMU 里程计</h3><p>分离腕部姿态与摆臂周期，用多尺度记忆持续估计速度与方向。</p></article>
+          <article><h3>稀疏 GNSS 辅助里程计</h3><p>在惯性轨迹上联合优化速度与稀疏位置观测，校正长距离漂移。</p></article>
+        </div>
+        <table class="result-table"><caption>精选路线 · 全程位置均方根误差（米）</caption>
+          <thead><tr><th scope="col">路线</th><th scope="col">纯 IMU</th><th scope="col">GNSS 辅助</th><th scope="col">误差降幅</th></tr></thead>
+          <tbody><tr><th scope="row"><a href="#eastlake">东湖 20.01 km</a><small>5 个段末 GNSS 点</small></th><td>1,425.1</td><td>282.3</td><td><strong>80.2%</strong></td></tr>
+<tr><th scope="row"><a href="#scene-outdoor-close">操场漫步</a><small>3 个 GNSS 点</small></th><td>2.11</td><td>1.45</td><td><strong>31.4%</strong></td></tr></tbody>
+        </table>
+        <p class="result-note">同一路线离线对比，稀疏 GNSS 观测与评估真值同源。</p>
       </section>
       <div class="hero-stage">
         <div class="stage-heading"><span class="live-label"><i></i> 精选现场</span><div id="hero-tabs" class="segmented" aria-label="精选场景"></div></div>
         <div id="hero-player"></div>
       </div>
-      <section id="method" class="method-summary" aria-labelledby="method-title">
-        <h2 id="method-title">三项方法创新</h2>
-        <div class="method-grid">
-          <article><h3>姿态解耦与周期感知</h3><p>先把九轴测量对齐到重力方向，再用向量分支跟踪方向、标量分支提取水平旋转不变特征。结合磁场质量与摆臂周期的可信度，减轻手腕摆动对运动估计的干扰。</p></article>
-          <article><h3>多尺度记忆与因果融合</h3><p>同时追踪短时步态和持续转向，按转弯强度调节当前测量与历史状态的权重。只用当前和过去的信号估计速度、方向及其不确定性，兼顾直行稳定性和转弯响应。</p></article>
-          <article><h3>稀疏 GNSS 多因子优化</h3><p>联合优化预测速度、稀疏定位和运动连续性，按观测质量与预测不确定性加权。用鲁棒损失减轻异常定位的影响，通过固定滞后平滑修正近期航向与尺度漂移。</p></article>
-        </div>
-      </section>
+
     </section>
 
     <section id="small" class="section wrap" aria-labelledby="small-title">

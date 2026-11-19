@@ -21,11 +21,70 @@
     }
     return pending.get(item.payload);
   }
-  // Decode the displayed element, then give the browser a paint between the
-  // image becoming visible and inserting the first overlay or advancing time.
-  window.showcaseMapReady = async function(image,src) {
+  // Reuse the same north-up Web Mercator extent as the exported route pixels.
+  const imagery = new Map();
+  const world = 2 * Math.PI * 6378137;
+  async function onlineBackdrop(layer, zoom) {
+    const [west,south,east,north] = layer.bounds3857;
+    const ppm = 256 * 2 ** zoom / world;
+    const left = (west + world/2)*ppm, top = (world/2 - north)*ppm;
+    const width = (east-west)*ppm, height = (north-south)*ppm;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(width); canvas.height = Math.ceil(height);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(canvas.width/width,0,0,canvas.height/height,0,0);
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(),12000);
+    async function tile(x,y) {
+      const params = new URLSearchParams({
+        SERVICE:'WMTS', REQUEST:'GetTile', VERSION:'1.0.0', LAYER:'img',
+        STYLE:'default', TILEMATRIXSET:'w', FORMAT:'tiles', TILEMATRIX:zoom,
+        TILEROW:y, TILECOL:x, tk:'89bcebef20b3304b0bcbd3b556e4bb50'
+      });
+      const response = await fetch('https://t'+((x+y)%8)+'.tianditu.gov.cn/img_w/wmts?'+params,{signal:controller.signal});
+      if (!response.ok) throw Error('天地图影像暂不可用');
+      const bitmap = await createImageBitmap(await response.blob());
+      try {
+        if (bitmap.width!==256 || bitmap.height!==256) throw Error('影像瓦片无效');
+        ctx.drawImage(bitmap,x*256-left,y*256-top);
+      } finally { bitmap.close(); }
+    }
+    try {
+      const requests = [];
+      for (let y=Math.floor(top/256);y<Math.ceil((top+height)/256);y++) {
+        for (let x=Math.floor(left/256);x<Math.ceil((left+width)/256);x++) requests.push(tile(x,y));
+      }
+      await Promise.all(requests);
+      const blob = await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+      if (!blob) throw Error('影像合成失败');
+      return URL.createObjectURL(blob);
+    } finally { clearTimeout(timeout); controller.abort(); }
+  }
+  function backdrop(layer, image) {
+    const [west,south,east,north] = layer.bounds3857;
+    const ratio = Math.min(window.devicePixelRatio || 1,2);
+    const target = Math.min(1800,Math.max(768,image.clientWidth*ratio));
+    const zoom = Math.min(18,Math.max(1,Math.round(Math.log2(target*world/(256*(east-west))))));
+    const key = layer.src+'@'+zoom;
+    if (!imagery.has(key)) {
+      const task = onlineBackdrop(layer,zoom).catch(error=>{imagery.delete(key);throw error;});
+      imagery.set(key,task);
+    }
+    return imagery.get(key);
+  }
+  window.showcaseMapReady = async function(image,layer) {
+    let src=layer.src, provider='离线底图';
+    if (/^https?:$/.test(location.protocol) && navigator.onLine && layer.bounds3857) {
+      try {src=await backdrop(layer,image); provider='影像 © 天地图';}
+      catch {provider='备用底图';}
+    }
+    if (!image.isConnected) return;
     image.src=src;
     await image.decode();
+    if (!image.isConnected) return;
+    const credit=document.createElement('span');
+    credit.className='map-credit';credit.textContent=provider;
+    image.parentNode.append(credit);
     await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));
   };
   function svg(tag, parent, attrs = {}, text) {
@@ -268,7 +327,7 @@
         this.started=true;retry.hidden=true;out.value=image?'底图加载中…':'轨迹加载中…';
         if(camera && !camera.hasAttribute('src'))camera.src=item.camera.src;
         try{
-          const [d]=await Promise.all([load(item),image?window.showcaseMapReady(image,item.mapLayer.src):null]);
+          const [d]=await Promise.all([load(item),image?window.showcaseMapReady(image,item.mapLayer):null]);
           if(this.closed)return;
           this.space=space(route,d,item);this.motion=motion(signals,d,item);
           if(item.segments)this.segmentPanel=window.eastlakePanel(this,item,d,route,signals,image,time=>{
