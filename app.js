@@ -130,7 +130,8 @@
         video.currentTime = Math.min(savedTime, video.duration || savedTime);
         pendingSeek = false;
       }
-      if (resumeAfterLoad) { video.play().catch(() => {}); resumeAfterLoad = false; }
+      if (resumeAfterLoad && visible && !manuallyPaused && !document.hidden) video.play().catch(() => {});
+      resumeAfterLoad = false;
       update();
     });
     seek.addEventListener('input', () => {
@@ -144,12 +145,17 @@
     let rateIndex = 0;
     rate.addEventListener('click', () => {
       rateIndex = (rateIndex + 1) % rates.length;
+      video.defaultPlaybackRate = rates[rateIndex];
       video.playbackRate = rates[rateIndex];
       rate.textContent = `${rates[rateIndex]}×`;
       rate.setAttribute('aria-label', `切换播放速度，当前 ${rates[rateIndex]} 倍`);
     });
     if (quality) quality.addEventListener('click', () => {
-      savedTime = video.currentTime; pendingSeek = true; resumeAfterLoad = !video.paused;
+      if (!pendingSeek) savedTime = video.currentTime;
+      pendingSeek = true;
+      resumeAfterLoad = visible && !manuallyPaused && !document.hidden;
+      // Changing src starts a new media load. Resume explicitly after restoring the playhead.
+      video.autoplay = false;
       highQuality = !highQuality;
       desiredSrc = highQuality ? item.hd : item.src;
       video.src = desiredSrc;
