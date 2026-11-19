@@ -122,7 +122,8 @@
       }
       for (const view of this.views) {
         const image=new Image();image.alt='卫星底图';image.decoding='async';
-        view.image.replaceWith(image);view.image=image;
+        if(view.viewport){view.map.append(view.canvas);view.viewport.destroy();view.viewport=null;}
+        view.image.remove();view.map.prepend(image);view.image=image;
         view.map.querySelector('.map-credit')?.remove();
         view.map.style.aspectRatio=scene.mapLayer.nativeSize.join('/');
         view.canvas.width=view.canvas.width;
@@ -138,6 +139,21 @@
         const imageTasks=this.views.map(({image})=>window.showcaseMapReady(image,map));
         const [data]=await Promise.all([loadRoute(clip),...imageTasks]);
         if(token!==this.token)return;
+        this.views.forEach(view=>{
+          view.viewport=new window.ReplayMap(view.map,view.image,map);
+          view.viewport.map.getContainer().append(view.canvas);
+        });
+        let syncing=false;
+        this.views.forEach((view,i)=>{
+          const source=view.viewport.map, peer=this.views[1-i].viewport.map;
+          source.on('move',()=>{
+            if(syncing)return;
+            syncing=true;
+            try {peer.setView(source.getCenter(),source.getZoom(),{animate:false});}
+            finally {syncing=false;}
+            this.draw();
+          });
+        });
         this.data=data;this.seek.disabled=false;
         this.ref=Float64Array.from(map.coords.gt.flat());this.raw=Float64Array.from(map.coords.pred.flat());
         this.arrivals=data.fixes.map(([t],i)=>t/this.total*clip.travel+i*clip.hold);
@@ -166,12 +182,14 @@
       const [gt,pred,aux]=this.scene.legend;
       const old=count===1?this.raw:data.stages[count-2];
       const ratio=window.devicePixelRatio||1;
-      this.views.forEach(({map,canvas,ctx,ref,estimate},side)=>{
-        const w=map.clientWidth,h=map.clientHeight;
+      this.views.forEach(({map,canvas,ctx,ref,estimate,viewport},side)=>{
+        const vw=map.clientWidth,vh=map.clientHeight;
+        const {left,top,width:w,height:h}=viewport.screenRect();
         if(!w||!h)return;
-        const pw=Math.round(w*ratio),ph=Math.round(h*ratio);
+        const pw=Math.round(vw*ratio),ph=Math.round(vh*ratio);
         if(canvas.width!==pw||canvas.height!==ph){canvas.width=pw;canvas.height=ph;}
-        ctx.setTransform(pw/w,0,0,ph/h,0,0);ctx.clearRect(0,0,w,h);
+        ctx.setTransform(pw/vw,0,0,ph/vh,0,0);ctx.clearRect(0,0,vw,vh);
+        ctx.translate(left,top);
         ref.draw(ctx,this.ref,null,1,last,f,w,h,gt.color,3.8);
         const assisted=side===1 && count>0;
         estimate.draw(ctx,assisted?data.stages[count-1]:this.raw,assisted&&blend?old:null,mix,last,f,w,h,assisted?aux.color:pred.color,2.5);

@@ -21,72 +21,6 @@
     }
     return pending.get(item.payload);
   }
-  // Reuse the same north-up Web Mercator extent as the exported route pixels.
-  const imagery = new Map();
-  const world = 2 * Math.PI * 6378137;
-  async function onlineBackdrop(layer, zoom) {
-    const [west,south,east,north] = layer.bounds3857;
-    const ppm = 256 * 2 ** zoom / world;
-    const left = (west + world/2)*ppm, top = (world/2 - north)*ppm;
-    const width = (east-west)*ppm, height = (north-south)*ppm;
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.ceil(width); canvas.height = Math.ceil(height);
-    const ctx = canvas.getContext('2d');
-    ctx.setTransform(canvas.width/width,0,0,canvas.height/height,0,0);
-    const controller = new AbortController();
-    const timeout = setTimeout(()=>controller.abort(),12000);
-    async function tile(x,y) {
-      const params = new URLSearchParams({
-        SERVICE:'WMTS', REQUEST:'GetTile', VERSION:'1.0.0', LAYER:'img',
-        STYLE:'default', TILEMATRIXSET:'w', FORMAT:'tiles', TILEMATRIX:zoom,
-        TILEROW:y, TILECOL:x, tk:'89bcebef20b3304b0bcbd3b556e4bb50'
-      });
-      const response = await fetch('https://t'+((x+y)%8)+'.tianditu.gov.cn/img_w/wmts?'+params,{signal:controller.signal});
-      if (!response.ok) throw Error('天地图影像暂不可用');
-      const bitmap = await createImageBitmap(await response.blob());
-      try {
-        if (bitmap.width!==256 || bitmap.height!==256) throw Error('影像瓦片无效');
-        ctx.drawImage(bitmap,x*256-left,y*256-top);
-      } finally { bitmap.close(); }
-    }
-    try {
-      const requests = [];
-      for (let y=Math.floor(top/256);y<Math.ceil((top+height)/256);y++) {
-        for (let x=Math.floor(left/256);x<Math.ceil((left+width)/256);x++) requests.push(tile(x,y));
-      }
-      await Promise.all(requests);
-      const blob = await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
-      if (!blob) throw Error('影像合成失败');
-      return URL.createObjectURL(blob);
-    } finally { clearTimeout(timeout); controller.abort(); }
-  }
-  function backdrop(layer, image) {
-    const [west,south,east,north] = layer.bounds3857;
-    const ratio = Math.min(window.devicePixelRatio || 1,2);
-    const target = Math.min(1800,Math.max(768,image.clientWidth*ratio));
-    const zoom = Math.min(18,Math.max(1,Math.round(Math.log2(target*world/(256*(east-west))))));
-    const key = layer.src+'@'+zoom;
-    if (!imagery.has(key)) {
-      const task = onlineBackdrop(layer,zoom).catch(error=>{imagery.delete(key);throw error;});
-      imagery.set(key,task);
-    }
-    return imagery.get(key);
-  }
-  window.showcaseMapReady = async function(image,layer) {
-    let src=layer.src, provider='离线底图';
-    if (/^https?:$/.test(location.protocol) && navigator.onLine && layer.bounds3857) {
-      try {src=await backdrop(layer,image); provider='影像 © 天地图';}
-      catch {provider='备用底图';}
-    }
-    if (!image.isConnected) return;
-    image.src=src;
-    await image.decode();
-    if (!image.isConnected) return;
-    const credit=document.createElement('span');
-    credit.className='map-credit';credit.textContent=provider;
-    image.parentNode.append(credit);
-    await new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)));
-  };
   function svg(tag, parent, attrs = {}, text) {
     const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
     for (const [key,value] of Object.entries(attrs)) node.setAttribute(key,value);
@@ -247,6 +181,7 @@
       route.before(plan);plan.append(route);
       const image=item.mapLayer?new Image():null;
       if(image){
+        route.setAttribute('viewBox','0 0 640 '+640*item.mapLayer.nativeSize[1]/item.mapLayer.nativeSize[0]);
         image.alt='卫星底图';image.decoding='async';plan.prepend(image);
       }
       if(item.segments){
@@ -329,11 +264,15 @@
         try{
           const [d]=await Promise.all([load(item),image?window.showcaseMapReady(image,item.mapLayer):null]);
           if(this.closed)return;
+          if(image)this.viewport=new window.ReplayMap(plan,image,item.mapLayer,route);
           this.space=space(route,d,item);this.motion=motion(signals,d,item);
           if(item.segments)this.segmentPanel=window.eastlakePanel(this,item,d,route,signals,image,time=>{
             this.time=time;this.last=0;this.hold=0;draw();
           });
-          if(d.pose)this.pose=watch(route,d.pose);
+          if(d.pose){
+            const hud=image?svg('svg',plan,{viewBox:'0 0 640 445',class:'watch-hud','aria-label':'手表姿态'}):route;
+            this.pose=watch(hud,d.pose);
+          }
           this.data=d;this.end=d.t.at(-1);seek.disabled=false;draw();schedule();
         }catch{
           if(!this.closed){this.started=false;out.value=image?'底图或轨迹加载失败':'轨迹加载失败';retry.hidden=false;}
@@ -367,7 +306,7 @@
       };
     }
     destroy(){
-      this.closed=true;
+      this.closed=true;this.viewport?.destroy();
       if(this.camera){this.camera.onerror=null;this.camera.onloadedmetadata=null;this.camera.pause();this.camera.removeAttribute('src');this.camera.load();}
       cancelAnimationFrame(this.frame);this.observer.disconnect();
       document.removeEventListener('visibilitychange',this.onVisibility);

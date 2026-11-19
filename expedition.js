@@ -56,14 +56,8 @@
     const marks=[],buttons=[];
     const height=Number(route.viewBox.baseVal.height);
     const offsets=[[20,14],[18,-12],[-18,-12],[-20,-14],[-17,17]];
-    const compass=vector('g',route,{transform:'translate(20 22)','aria-hidden':'true'});
-    vector('rect',compass,{x:-12,y:-14,width:24,height:44,rx:3,fill:'#102329',opacity:.87});
-    vector('text',compass,{y:-2,'text-anchor':'middle',fill:'white','font-size':11},'北');
-    vector('path',compass,{d:'M0 2 L7 22 L0 18 L-7 22 Z',fill:'#f5fbfa'});
-    const scale=vector('g',route,{transform:'translate(14 '+(height-32)+')','aria-hidden':'true'});
-    vector('rect',scale,{width:item.scale500+12,height:22,fill:'#102329',opacity:.84,rx:2});
-    vector('text',scale,{x:6+item.scale500/2,y:10,'text-anchor':'middle',fill:'white','font-size':8},'500 米');
-    vector('path',scale,{d:'M6 13v4m0 -2h'+item.scale500+'m0 -2v4',fill:'none',stroke:'white'});
+    const compass=node('span',root.querySelector('.track-plan'),'map-north','↑ 北');
+    compass.setAttribute('aria-label','北向上');
     const over=vector('g',route,{'aria-label':'段末 GNSS 位置观测'});
     segs.forEach((s,n)=>{
       const b=node('button',list,'exp-segment');b.type='button';
