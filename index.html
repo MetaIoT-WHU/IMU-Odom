@@ -7,13 +7,13 @@
   <meta name="description" content="运动轨迹效果展示：室内与室外、小尺度与长距离，实景视频与轨迹动态对照。">
   <title>迹 · 运动轨迹效果展示</title>
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=eastlake-five-1">
-  <script src="data.js?v=eastlake-five-1" defer></script>
+  <link rel="stylesheet" href="style.css?v=eastlake-five-2">
+  <script src="data.js?v=eastlake-five-2" defer></script>
   <script src="gallery.js" defer></script>
-  <script src="sparse.js?v=eastlake-five-1" defer></script>
-  <script src="trajectory.js?v=eastlake-five-1" defer></script>
-  <script src="expedition.js" defer></script>
-  <script src="app.js?v=eastlake-five-1" defer></script>
+  <script src="sparse.js?v=eastlake-five-2" defer></script>
+  <script src="trajectory.js?v=eastlake-five-2" defer></script>
+  <script src="expedition.js?v=eastlake-five-2" defer></script>
+  <script src="app.js?v=eastlake-five-2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#small">跳到效果展示</a>
@@ -52,7 +52,7 @@
           <p class="exp-policy">每段终点一次定位<br><strong>全程 5 个 GNSS 观测点</strong></p>
         </header>
         <div id="eastlake-player"></div>
-        <p class="exp-note">按采集顺序拼接，跳过段间停录。辅助曲线为五个段末观测的离线校正结果；段末误差取校正位置与同源观测的距离。</p>
+        <p class="exp-note">按采集顺序拼接，跳过段间停录。辅助曲线为五个段末观测的离线校正结果。段末误差取校正位置与同源观测的距离。</p>
         <details class="exp-details"><summary>数据与对齐说明</summary><p>五段使用各自的惯性预测，第一段以参考路线对齐初始位置和航向，后续段继承上一段预测的末位姿。前两段在基准训练划分，后三段在测试划分，五段记录均未参与对应推理模型的训练。时间为北京时间，yaw 表示行进航向。</p></details>
       </article>
     </div></section>

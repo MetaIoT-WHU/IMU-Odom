@@ -364,3 +364,4 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
  .exp-replay .track-controls{grid-row:3;margin:8px 0 12px}
  .exp-replay .track-panels figure:nth-child(2){grid-row:4}
 }
+@media(max-width:600px){.exp-fix-symbol{transform:scale(1.7)}}

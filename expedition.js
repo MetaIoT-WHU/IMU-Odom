@@ -75,10 +75,11 @@
       b.onclick=()=>jump(d.t[s.first]);buttons.push(b);
       const [x,y]=d.mapCoords.gt[s.last], [lx,ly]=offsets[n];
       const g=vector('g',over,{transform:'translate('+x*640+' '+y*height+')',display:'none','data-fix':n+1});
-      vector('line',g,{x1:0,y1:0,x2:lx,y2:ly,stroke:'#fff','stroke-width':2});
-      vector('polygon',g,{points:star,fill:'#ad2167',stroke:'white','stroke-width':1.6});
-      vector('circle',g,{cx:lx,cy:ly,r:7.3,fill:'#8b2059',stroke:'white','stroke-width':1});
-      vector('text',g,{x:lx,y:ly+3.6,'text-anchor':'middle',fill:'white','font-size':10,'font-weight':700},n+1);
+      const marker=vector('g',g,{class:'exp-fix-symbol'});
+      vector('line',marker,{x1:0,y1:0,x2:lx,y2:ly,stroke:'#fff','stroke-width':2});
+      vector('polygon',marker,{points:star,fill:'#ad2167',stroke:'white','stroke-width':1.6});
+      vector('circle',marker,{cx:lx,cy:ly,r:7.3,fill:'#8b2059',stroke:'white','stroke-width':1});
+      vector('text',marker,{x:lx,y:ly+3.6,'text-anchor':'middle',fill:'white','font-size':10,'font-weight':700},n+1);
       marks.push(g);
     });
     const summary=node('div',rail,'exp-summary');node('p',summary,'','全程位置均方根误差');

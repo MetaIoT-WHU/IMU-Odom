@@ -38,7 +38,11 @@
   const grid = '#e2eaf0', ink = '#64788a';
   const line = (g,x1,y1,x2,y2,stroke=grid) => svg('line',g,{x1,y1,x2,y2,stroke});
   const label = (g,x,y,value,align='start') => svg('text',g,{x,y,fill:ink,'font-size':14,'text-anchor':align},value);
-  const clock = t => Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
+  const clock = t => {
+    const seconds=String(Math.floor(t%60)).padStart(2,'0');
+    const minutes=Math.floor(t/60);
+    return minutes<60?minutes+':'+seconds:Math.floor(minutes/60)+':'+String(minutes%60).padStart(2,'0')+':'+seconds;
+  };
   const xy = p => p && Number.isFinite(p[0]) && Number.isFinite(p[1]);
   const coord = p => p[0].toFixed(2)+' '+p[1].toFixed(2);
   function upper(times,value) {
