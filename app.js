@@ -44,6 +44,7 @@
   data.small.forEach(id => {
     const s = data.scenes[id];
     const card = el('article', 'scene-card');
+    card.id = 'scene-'+id;
     const heading = el('div', 'scene-card-heading');
     const text = el('div'); text.append(el('h3', '', s.title), el('p', '', s.subtitle+' · '+s.splitLabel));
     heading.append(text);
