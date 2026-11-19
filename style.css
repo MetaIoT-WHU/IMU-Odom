@@ -268,3 +268,25 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
 .sparse-replay:fullscreen,.sparse-replay.expanded{background:#fff;overflow:auto;align-content:center}
 .sparse-replay.expanded{position:fixed;inset:0;z-index:130}
 @media(max-width:680px){.sparse-maps{grid-template-columns:1fr}.sparse-map{width:min(100%,62vh);margin:auto}.sparse-controls{gap:6px 10px;font-size:13px}.sparse-seek{order:-1;flex-basis:100%!important}.sparse-count{margin-right:auto}.sparse-key{gap:4px 12px}}
+
+.track-replay{background:#fff;color:#253b4f;padding:0 12px;container-type:inline-size}
+.track-replay .player-legend{display:flex;justify-content:center;gap:5px 22px;padding:14px 0 10px;font-size:clamp(12px,1.3vw,15px)}
+.track-panels{display:grid;grid-template-columns:minmax(0,640fr) minmax(0,440fr);align-items:center;gap:14px}
+.track-panels figure{min-width:0;margin:0}
+.track-panels figcaption{margin:4px 0;text-align:center;font-weight:600;font-size:14px}
+.track-panels svg{display:block;width:100%;height:auto}
+.track-controls{display:flex;gap:12px;align-items:center;padding:11px 5px;color:#486077;border-top:1px solid #e7edf1}
+.track-controls button,#large-history{border:1px solid #d4e0e8;border-radius:6px;background:white;color:#31516a;padding:5px 10px;cursor:pointer}
+.track-controls output{font-variant-numeric:tabular-nums;font-size:12px}
+.track-controls input{flex:1;min-width:24px;accent-color:#0087c2}
+.track-replay:fullscreen,.track-replay.expanded{display:grid;align-content:center;overflow:auto;background:#fff}
+.track-replay.expanded{position:fixed;inset:0;z-index:1000}
+.track-replay:fullscreen .track-panels,.track-replay.expanded .track-panels{max-width:min(100%,160vh);margin:auto;width:100%}
+.section-footer [hidden]{display:none}
+@container(max-width:620px){
+ .track-panels{grid-template-columns:1fr;gap:8px}
+ .track-panels figure:nth-child(2) svg{max-height:320px}
+ .track-replay .player-legend{gap:3px 12px}
+ .track-controls{gap:6px}
+ .track-controls button{font-size:12px;padding:5px 7px}
+}

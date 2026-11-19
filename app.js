@@ -115,6 +115,10 @@
       host._player.destroy();
       host.replaceChildren();
     }
+    if (item.native) {
+      host._player = new window.TrackReplay(host,item,playerLegend(item.legend));
+      return host._player;
+    }
     const root = el('div', 'player');
     const frame = el('div', 'video-frame');
     const video = el('video');
@@ -339,7 +343,23 @@
     $('#large-badge').textContent = auxiliaryLabel(s);
     $('#large-badge').className = `pill ${s.gnssAdded ? 'assisted' : ''}`;
     const original=$('#large-original');
-    original.href=s.original;original.textContent='历史回放 · '+s.historicalLegend[1].label+' ↗';
+    const toggle=$('#large-history');
+    original.hidden=!s.original;
+    toggle.hidden=!s.history;
+    if(s.original){
+      original.href=s.original;original.textContent='历史回放 · '+s.historicalLegend[1].label+' ↗';
+    }
+    if(s.history){
+      let historical=false;
+      toggle.setAttribute('aria-pressed','false'); toggle.textContent='查看历史回放';
+      toggle.onclick=()=>{
+        historical=!historical;
+        toggle.setAttribute('aria-pressed',String(historical));toggle.textContent=historical?'返回三轨对照':'查看历史回放';
+        $('#large-name').textContent=historical?s.history.title:s.title;
+        $('#large-badge').textContent=historical?s.history.legend[1].label:auxiliaryLabel(s);
+        makePlayer($('#large-player'),historical?{...s.history,mapLayer:s.mapLayer}:s);
+      };
+    }
     makePlayer($('#large-player'), s, {autoplay});
   }
   data.large.forEach(id => {
@@ -366,7 +386,7 @@
     const host=$('#gallery-player');
     if(galleryCanvas){galleryCanvas.destroy();galleryCanvas=null;}
     if(host._player){host._player.destroy();host._player=null;host.replaceChildren();}
-    $('#gallery-mode').textContent=galleryVideo?'看动态图':'看视频';
+    $('#gallery-mode').textContent=galleryVideo?'看坐标图':s.native?'看轨迹回放':'看视频';
     $('#gallery-mode').setAttribute('aria-pressed',String(galleryVideo));
     $('#gallery-animation').closest('label').hidden=galleryVideo;
     if(galleryVideo) makePlayer(host,s);
