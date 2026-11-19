@@ -82,7 +82,16 @@
       this.reset=()=>map.fitBounds(this.bounds,{animate:false});
       this.reset();
       const homeZoom=map.getZoom();
-      if (!online) map.setMinZoom(Math.floor(homeZoom)-1);
+      const scaleBarWidth=68;
+      if (layer.initialScaleMeters) {
+        // At the default zoom the requested distance takes up 2/3 of the scale control.
+        // Leaflet rounds down to a metric tick and still updates it on later zooms.
+        const y=map.getSize().y/2;
+        const distance=map.distance(map.containerPointToLatLng([0,y]),map.containerPointToLatLng([scaleBarWidth,y]));
+        const zoom=map.getScaleZoom(distance/(1.5*layer.initialScaleMeters),homeZoom);
+        map.setZoom(zoom,{animate:false});
+      }
+      if (!online) map.setMinZoom(Math.floor(Math.min(homeZoom,map.getZoom()))-1);
       // Keep a decoded image beneath the live tiles while changing zoom levels.
       map.createPane('backdrop').style.zIndex=190;
       image.style.objectFit='fill';
@@ -107,7 +116,7 @@
         return button;
       };
       control.addTo(map);
-      L.control.scale({imperial:false,maxWidth:68}).addTo(map);
+      L.control.scale({imperial:false,maxWidth:scaleBarWidth}).addTo(map);
       this.resize=new ResizeObserver(()=>map.invalidateSize({pan:false,animate:false}));
       this.resize.observe(container);
     }
