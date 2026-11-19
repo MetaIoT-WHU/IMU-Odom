@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="data.js" defer></script>
   <script src="gallery.js" defer></script>
+  <script src="sparse.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -55,8 +56,23 @@
 
     <section id="gnss" class="section wrap" aria-labelledby="gnss-title">
       <div class="section-heading"><h2 id="gnss-title">稀疏 GNSS 辅助纠偏</h2></div>
-      <p class="sparse-intro">左图由手表连续推算轨迹。右图约每 60 秒接收一个 GNSS 位置，黑点亮起时，红线随新观测修正已走过的路线，再继续向前推算。</p>
-      <div class="large-stage"><div class="stage-heading"><h3 id="gnss-name"></h3><div id="gnss-tabs" class="segmented" aria-label="选择纠偏路线"></div></div><div id="gnss-player"></div></div>
+      <p class="sparse-intro">两幅地图同步回放同一段手表记录。辅助轨迹约每 60 秒接收一个 GNSS 位置。黑点亮起时，红线更新此前的路线，再继续向前推算。</p>
+      <div class="large-stage"><div class="stage-heading"><h3 id="gnss-name"></h3><div id="gnss-tabs" class="segmented" aria-label="选择纠偏路线"></div></div><div id="gnss-player" class="sparse-replay">
+        <div class="sparse-key" aria-label="轨迹图例"></div>
+        <div class="sparse-maps">
+          <figure><figcaption>纯惯性推理</figcaption><div class="sparse-map"><img alt="" decoding="async"><canvas role="img" aria-label="真值与纯惯性轨迹"></canvas></div></figure>
+          <figure><figcaption>稀疏 GNSS 辅助</figcaption><div class="sparse-map"><img alt="" decoding="async"><canvas role="img" aria-label="真值、GNSS 观测点与纠偏轨迹"></canvas></div></figure>
+        </div>
+        <p class="sparse-status" role="status" hidden></p>
+        <div class="sparse-controls">
+          <button type="button" class="sparse-play">暂停</button>
+          <span class="sparse-clock"></span>
+          <input class="sparse-seek" type="range" min="0" max="1000" value="0" aria-label="纠偏回放进度">
+          <span class="sparse-count"></span>
+          <button type="button" class="sparse-speed" aria-label="切换回放倍速">2×</button>
+          <button type="button" class="sparse-expand" aria-label="放大纠偏回放">放大</button>
+        </div>
+      </div></div>
       <p id="gnss-result" class="sparse-result"></p>
       <p class="section-note">误差按最终回放轨迹计算，排除起点和观测时刻。观测点取自同一条 GNSS 参考轨迹。</p>
     </section>

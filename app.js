@@ -417,11 +417,12 @@
   $('#gallery-next').addEventListener('click', () => moveGallery(1));
   selectGallery(selectedGallery);
   const sparseTabs = new Map();
+  const sparseReplay = new window.SparseReplay($('#gnss-player'));
   function selectSparse(clip) {
     pressed(sparseTabs, clip.id);
     $('#gnss-name').textContent = clip.title;
     $('#gnss-result').textContent = `${clip.count} 个 GNSS 观测点 · 位置均方根误差 ${clip.before.toFixed(2)} → ${clip.after.toFixed(2)} 米`;
-    makePlayer($('#gnss-player'), clip);
+    sparseReplay.select(clip, data.scenes[clip.route]);
   }
   for (const clip of data.sparse) {
     const button = el('button', '', clip.title);
