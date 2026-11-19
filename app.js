@@ -21,6 +21,17 @@
   const players = new Set();
   let theater = null;
   function announce(text) { $('#announcer').textContent = text; }
+  const auxiliaryLabel = scene => scene.legend.find(entry => entry.id === 'aux').label;
+  function playerLegend(entries) {
+    const list = el('ul', 'player-legend');
+    list.setAttribute('aria-label', '轨迹图例');
+    for (const entry of entries) {
+      const label = el('li', '', entry.label);
+      label.style.setProperty('--stroke', entry.color);
+      list.append(label);
+    }
+    return list;
+  }
   function makePlayer(host, item, opts = {}) {
     opts = {autoplay:true, ...opts};
     if (host._player) {
@@ -74,7 +85,7 @@
     const expand = button('放大观看', icons.expand);
     const close = el('button', 'theater-close', '关闭放大 ×');
     close.setAttribute('aria-label', '关闭放大');
-    root.append(frame, bar, close);
+    root.append(frame, bar, playerLegend(item.legend), close);
     host.append(root);
     const state = {root, video, item, destroy, resume:()=>{if(visible&&!manuallyPaused)video.play().catch(()=>{});}};
     host._player = state;
@@ -212,7 +223,7 @@
   const heroButtons = new Map();
   function selectHero(id, autoplay = true) {
     pressed(heroButtons, id);
-    const label=$('.live-label'); label.replaceChildren(el('i'),document.createTextNode(`${data.scenes[id].location} ${data.scenes[id].gnssLabel}`));
+    const label=$('.live-label'); label.replaceChildren(el('i'),document.createTextNode(data.scenes[id].location));
     makePlayer($('#hero-player'), data.scenes[id], {autoplay});
   }
   data.hero.forEach(({id, label}) => {
@@ -227,7 +238,7 @@
     const heading = el('div', 'scene-card-heading');
     const text = el('div'); text.append(el('h3', '', s.title), el('p', '', s.subtitle+' · '+s.splitLabel));
     heading.append(text, el('span', 'pill', s.quality));
-    text.append(el('p','assistance-label',s.gnssAdded ? '辅助对照'+s.gnssLabel : '间歇视觉位置辅助（未加入GNSS观测）'));
+    text.append(el('p','assistance-label',auxiliaryLabel(s)));
     const host = el('div');
     const meta = el('div', 'card-meta');
     meta.append(el('span','',`${s.anchorCount} 个${s.gnssAdded?' GNSS ':'视觉'}点 · 位置均方根误差 ${s.errorBefore.toFixed(2)} → ${s.errorAfter.toFixed(2)} 米`)); 
@@ -240,10 +251,10 @@
     const s = data.scenes[id]; pressed(largeButtons, id);
     $('#large-name').textContent = s.title;
 
-    $('#large-badge').textContent = s.gnssLabel;
+    $('#large-badge').textContent = auxiliaryLabel(s);
     $('#large-badge').className = `pill ${s.gnssAdded ? 'assisted' : ''}`;
     const original=$('#large-original');
-    original.href=s.original;original.textContent='昨日原片 '+(s.originalGnss?'（间接性加入GNSS观测）':'（未加入GNSS观测）')+' ↗';
+    original.href=s.original;original.textContent='历史回放 · '+s.historicalLegend[1].label+' ↗';
     makePlayer($('#large-player'), s, {autoplay});
   }
   data.large.forEach(id => {
@@ -282,7 +293,7 @@
     const host = $('#gallery-list'); host.replaceChildren();
     galleryVisible = data.gallery.filter(id => {
       const s = data.scenes[id];
-      return (galleryFilter === '全部' || s.location === galleryFilter || (galleryFilter==='视觉辅助'&&!s.gnssAdded) || (galleryFilter==='GNSS 辅助'&&s.gnssAdded)) && `${s.title}${s.subtitle}${s.description}${s.gnssLabel}`.includes(galleryQuery);
+      return (galleryFilter === '全部' || s.location === galleryFilter || (galleryFilter==='视觉辅助'&&!s.gnssAdded) || (galleryFilter==='GNSS 辅助'&&s.gnssAdded)) && `${s.title}${s.subtitle}${s.description}${auxiliaryLabel(s)}`.includes(galleryQuery);
     });
     $('#gallery-count').textContent = `${galleryVisible.length} 条精选路线`;
     $('#gallery-prev').disabled = galleryVisible.length < 2;
@@ -293,7 +304,7 @@
       const s = data.scenes[id]; const b = el('button', 'gallery-item'); b.type = 'button';
       b.setAttribute('aria-pressed', String(id === selectedGallery));
       const number=el('span','gallery-number',String(data.gallery.indexOf(id)+1).padStart(2,'0'));
-      const text = el('span'); text.append(el('strong', '', s.title), el('small', '', s.gnssAdded?'间接性加入GNSS观测':'视觉位置辅助 · 未加入GNSS观测'));
+      const text = el('span'); text.append(el('strong', '', s.title), el('small', '', auxiliaryLabel(s)));
       b.append(number, text); b.addEventListener('click', () => selectGallery(id)); host.append(b);
     });
   }

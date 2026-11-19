@@ -228,3 +228,8 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
  .site-header nav a{font-size:clamp(15px,4.1vw,18px)}
  .hero-heading h1{font-size:clamp(30px,7vw,44px)}
 }
+
+.player-legend{display:none;list-style:none;margin:0;padding:8px 12px;gap:4px 14px;flex-wrap:wrap;background:#fff;color:#34475b;font-size:12px;line-height:1.6}
+.player-legend li{display:inline-flex;align-items:center;gap:6px}
+.player-legend li::before{content:"";width:19px;height:3px;background:var(--stroke);border-radius:2px}
+@media(max-width:720px){.player-legend{display:flex}.scene-card-heading .assistance-label{display:none}}

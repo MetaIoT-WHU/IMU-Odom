@@ -85,11 +85,7 @@ window.TrajectoryCanvas = class {
     const clock=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
     text(`${clock(this.time)} / ${clock(this.total)}`,1388,49,23,'#253b50','right');
     text(`${(this.total/30*this.rate).toFixed(1)} 倍速回放`,1388,77,15,'#78899b','right');
-    const styles=[
-      {id:'gt',label:'真值',color:'#c48705',pale:'#eee1bf',dash:[9,6]},
-      {id:'pred',label:'本方法（未加入GNSS观测）',color:'#0087c2',pale:'#d3eaf4',dash:[]},
-      {id:'aux',label:'辅助对照（'+this.scene.auxLabel+'）',color:'#ea586f',pale:'#f7dfe3',dash:[]}
-    ];
+    const styles=this.scene.legend;
     styles.forEach((style,i)=>{
       const x=[234,446,829][i];
       line([x,99],[x+43,99],style.color,3,style.dash);text(style.label,x+54,105,19,'#324658');
