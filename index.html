@@ -16,7 +16,7 @@
   <a class="skip-link" href="#small">跳到效果展示</a>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="迹，返回首页"><img src="assets/mark.svg" width="32" height="32" alt=""><strong>迹<span>运动轨迹</span></strong></a>
-    <nav aria-label="页面导航"><a href="#small">小尺度</a><a href="#large">大尺度</a><a href="#gallery">轨迹画廊</a><a href="#vivo">VIVO 实测</a></nav>
+    <nav aria-label="页面导航"><a href="#small">小尺度</a><a href="#large">大尺度</a><a href="#gallery">轨迹画廊</a><a href="#gnss">GNSS 纠偏</a><a href="#vivo">VIVO 实测</a></nav>
 
   </header>
   <main id="top">
@@ -51,6 +51,14 @@
         <aside class="gallery-sidebar"><h3>浏览场景</h3><label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="gallery-search" type="search" placeholder="搜索场景名称" aria-label="搜索轨迹场景"></label><div id="gallery-list" class="gallery-list" aria-label="场景列表"></div><div class="list-footer"><span id="gallery-count"></span></div></aside>
         <div class="gallery-main"><div class="gallery-caption"><div><span id="gallery-category" class="eyebrow"></span><h3 id="gallery-name"></h3></div><div class="step-buttons"><button id="gallery-mode" aria-pressed="false">看视频</button><button id="gallery-prev" aria-label="上一条轨迹">← 上一个</button><button id="gallery-next" aria-label="下一条轨迹">下一个 →</button></div></div><div id="gallery-player"></div><p id="gallery-note" class="section-note"></p></div>
       </div>
+    </section>
+
+    <section id="gnss" class="section wrap" aria-labelledby="gnss-title">
+      <div class="section-heading"><h2 id="gnss-title">稀疏 GNSS 辅助纠偏</h2></div>
+      <p class="sparse-intro">左图由手表连续推算轨迹。右图约每 60 秒接收一个 GNSS 位置，黑点亮起时，红线随新观测修正已走过的路线，再继续向前推算。</p>
+      <div class="large-stage"><div class="stage-heading"><h3 id="gnss-name"></h3><div id="gnss-tabs" class="segmented" aria-label="选择纠偏路线"></div></div><div id="gnss-player"></div></div>
+      <p id="gnss-result" class="sparse-result"></p>
+      <p class="section-note">误差按最终回放轨迹计算，排除起点和观测时刻。观测点取自同一条 GNSS 参考轨迹。</p>
     </section>
 
     <section id="vivo" class="section vivo-section" aria-labelledby="vivo-title"><div class="wrap">

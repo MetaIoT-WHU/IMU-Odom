@@ -416,6 +416,21 @@
   $('#gallery-prev').addEventListener('click', () => moveGallery(-1));
   $('#gallery-next').addEventListener('click', () => moveGallery(1));
   selectGallery(selectedGallery);
+  const sparseTabs = new Map();
+  function selectSparse(clip) {
+    pressed(sparseTabs, clip.id);
+    $('#gnss-name').textContent = clip.title;
+    $('#gnss-result').textContent = `${clip.count} 个 GNSS 观测点 · 位置均方根误差 ${clip.before.toFixed(2)} → ${clip.after.toFixed(2)} 米`;
+    makePlayer($('#gnss-player'), clip);
+  }
+  for (const clip of data.sparse) {
+    const button = el('button', '', clip.title);
+    button.type = 'button';
+    button.onclick = () => selectSparse(clip);
+    $('#gnss-tabs').append(button);
+    sparseTabs.set(clip.id, button);
+  }
+  selectSparse(data.sparse[0]);
   let vivoFilter = '全部'; let selectedVivo = data.vivo[0].id; let vivoVisible = [...data.vivo];
   const vivoButtons = new Map();
   function selectVivo(id, redraw = true, autoplay = true) {

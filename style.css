@@ -244,3 +244,8 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
 .scene-card-heading .assistance-label,.large-stage .pill{font-size:13px}
 @media(max-width:700px){.segmented button{padding:7px 9px}.method-intro{text-align:left;margin-bottom:17px}.large-stage .stage-heading{flex-wrap:wrap}.card-meta{padding:10px 12px}.vivo-section h2{max-width:none}}
 .satellite-layer{position:absolute;pointer-events:none;background-size:100% 100%;background-repeat:no-repeat}
+
+.sparse-intro{max-width:54em;margin-bottom:18px;color:#40576b;font-size:clamp(15px,1.25vw,18px);line-height:1.75}
+.sparse-result{margin-top:15px;color:#344c61;font-size:clamp(16px,1.4vw,20px);font-weight:600;font-variant-numeric:tabular-nums}
+#gnss .section-note{margin-top:4px}
+@media(max-width:700px){.site-header nav{gap:clamp(5px,2vw,13px)}.site-header nav a{font-size:15px}#gnss .stage-heading{gap:6px;flex-wrap:wrap}#gnss-tabs button{font-size:14px}}
