@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="运动轨迹效果展示：室内与室外、小尺度与长距离，实景视频与轨迹动态对照。">
-  <meta name="author" content="武汉大学 MetaIoT 实验室">
-  <title>运动手表轨迹实测 · 武汉大学 MetaIoT 实验室</title>
+  <meta name="author" content="华中科技大学 MetaIoT 实验室">
+  <title>运动手表轨迹实测 · 华中科技大学 MetaIoT 实验室</title>
   <link rel="icon" href="assets/metaiot.jpg" type="image/jpeg">
   <noscript><link rel="stylesheet" href="style.css"></noscript>
   <script>
@@ -14,7 +14,7 @@
       const online = /^https?:$/.test(location.protocol) && navigator.onLine;
       const assets = {
         "leaflet/leaflet.css": "sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H",
-        "style.css": "sha384-Zzb4KORa9SRRkmawSJ78k4FvZP7Ftx3BiZJRRY0Q6nPHUWRlzpGrF8KE/12NU8mJ",
+        "style.css": "sha384-2U6Z+8A7gkgVZySvXzy0YDaqpBQXNzbB74OtT0kULOPUrA+HXuR/9v7TD5/eaukS",
         "data.js": "sha384-9cS27rHvSX0J3D+7r3b1B+AmZhRYJaphWM9/08G/qb1vWbsdrCWl8DilXtYTjL3/",
         "gallery.js": "sha384-0kmHAIC8YtJy73a9sAUU9wsxluv8uYciP+YORI91J2uNUMT3EOjLt2qCiiRC1RMI",
         "sparse.js": "sha384-6uAL4H357vuMbI22W3CaCZcQTo6XORxOcE5DmfL8iqQfVGh1/X4CjDD3NZtL0Jo0",
@@ -24,7 +24,7 @@
         "expedition.js": "sha384-DXtjehRkjihlme0+SXh45R+l6tyQxTtOc+zn7bJFOSWVxzqAbUam6K4KUkjFQAET",
         "app.js": "sha384-l/7jYEwuJCFaqlwH7wNEI2sjq4+5L9Vpr00dgFC10X3S7p88P4T1dOfceF7gBy/H"
 };
-      const project = 'https://jsd.onmicrosoft.cn/gh/MetaIoT-WHU/IMU-Odom@2620a7ad0523f50412e273f6ed9d9402082a4b19/';
+      const project = 'https://jsd.onmicrosoft.cn/gh/MetaIoT-WHU/IMU-Odom@6c251a7cb65bc07775a17c4f461e4c9cf8c21e9d/';
       const leaflet = 'https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/';
       const bootstrap = document.currentScript;
       function load(path) {
@@ -70,12 +70,8 @@
 <body>
   <a class="skip-link" href="#small">跳到效果展示</a>
   <header class="site-header">
-    <a class="university-brand" href="https://www.whu.edu.cn/" aria-label="武汉大学官网">
-      <img class="university-seal" src="assets/whu-seal.png" width="240" height="240" alt="">
-      <img class="university-name" src="assets/whu-name.png" width="450" height="123" alt="武汉大学">
-    </a>
     <nav aria-label="页面导航"><a href="#small">小尺度</a><a href="#large">大尺度</a><a href="#gallery">轨迹画廊</a><a href="#gnss">GNSS 纠偏</a><a href="#vivo">VIVO 实测</a></nav>
-    <a class="lab-brand" href="https://github.com/MetaIoT-WHU" aria-label="武汉大学 MetaIoT 实验室组织仓库">
+    <a class="lab-brand" href="https://github.com/MetaIoT-WHU" aria-label="MetaIoT 实验室组织仓库">
       <span class="lab-mark"><img src="assets/metaiot.jpg" width="732" height="732" alt=""></span>
       <span class="lab-name"><b>MetaIoT</b><small>实验室</small></span>
     </a>
@@ -189,7 +185,7 @@
       <p class="section-note">按采集时间回放 31 组测试轨迹。右侧速度由相邻位置随时间的变化计算。</p>
     </div></section>
   </main>
-  <footer class="site-footer wrap"><a href="https://github.com/MetaIoT-WHU">武汉大学 MetaIoT 实验室</a><a class="back-top" href="#top">回到顶部 ↑</a></footer>
+  <footer class="site-footer wrap"><a href="https://github.com/MetaIoT-WHU">华中科技大学 MetaIoT 实验室</a><a class="back-top" href="#top">回到顶部 ↑</a></footer>
   <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
   <noscript><p class="noscript">请启用浏览器脚本以查看轨迹回放。所有素材均保存在本地“assets”目录。</p></noscript>
 </body>
