@@ -14,17 +14,17 @@
       const online = /^https?:$/.test(location.protocol) && navigator.onLine;
       const assets = {
         "leaflet/leaflet.css": "sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H",
-        "style.css": "sha384-2U6Z+8A7gkgVZySvXzy0YDaqpBQXNzbB74OtT0kULOPUrA+HXuR/9v7TD5/eaukS",
-        "data.js": "sha384-9cS27rHvSX0J3D+7r3b1B+AmZhRYJaphWM9/08G/qb1vWbsdrCWl8DilXtYTjL3/",
+        "style.css": "sha384-seZK96W9zSRREeZxHFraNF1LSOOJPdFKifRe/A9cQg8GVhHeBqe1PTEDZ5nJWh0b",
+        "data.js": "sha384-D4F69KrKj7tvmOws/XpqQHE6xO0cp0MEbcWNvGsZwhOIUK8pLezJjRTjtowa6pgl",
         "gallery.js": "sha384-0kmHAIC8YtJy73a9sAUU9wsxluv8uYciP+YORI91J2uNUMT3EOjLt2qCiiRC1RMI",
         "sparse.js": "sha384-6uAL4H357vuMbI22W3CaCZcQTo6XORxOcE5DmfL8iqQfVGh1/X4CjDD3NZtL0Jo0",
         "leaflet/leaflet.js": "sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH",
         "maps.js": "sha384-TVt4JZKo68tAfMk78w2NqtD+Ah7YtyCJYYgQO7rKUoIygeIkk1+maOt7KECDf+Wm",
         "trajectory.js": "sha384-YKM//btpE3NFNDig8gGsg2OXnvb4kTXH9FW2L30iI0c7RWJqOQn+POm04DwMeCac",
         "expedition.js": "sha384-DXtjehRkjihlme0+SXh45R+l6tyQxTtOc+zn7bJFOSWVxzqAbUam6K4KUkjFQAET",
-        "app.js": "sha384-l/7jYEwuJCFaqlwH7wNEI2sjq4+5L9Vpr00dgFC10X3S7p88P4T1dOfceF7gBy/H"
+        "app.js": "sha384-yAyr59s/E0dm0P5F+H5amjlLamftUG1DPIPnrCBlJYEmpHh2aY6A8jgubqlad2qG"
 };
-      const project = 'https://jsd.onmicrosoft.cn/gh/MetaIoT-WHU/IMU-Odom@6c251a7cb65bc07775a17c4f461e4c9cf8c21e9d/';
+      const project = 'https://jsd.onmicrosoft.cn/gh/MetaIoT-WHU/IMU-Odom@c3cf81812d7745387f4a68a0e373255c26eba1f1/';
       const leaflet = 'https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/';
       const bootstrap = document.currentScript;
       function load(path) {
@@ -181,7 +181,7 @@
 
     <section id="vivo" class="section vivo-section" aria-labelledby="vivo-title"><div class="wrap">
       <div class="section-heading"><h2 id="vivo-title">VIVO 场景实测效果</h2><span class="vivo-total">31<span> 个场景</span></span></div>
-      <div class="vivo-workspace"><div class="vivo-stage"><div class="stage-heading"><span id="vivo-name">场景 A01</span><span class="pill neutral">无真值</span></div><div id="vivo-player"></div></div><aside class="vivo-sidebar"><div class="vivo-sidebar-heading"><h3>选择场景</h3><span id="vivo-count">全部 31 组</span></div><div id="vivo-filters" class="filter-row" aria-label="筛选 VIVO 分组"></div><div id="vivo-list" class="vivo-list" aria-label="VIVO 场景列表"></div><div class="vivo-bottom"><button id="vivo-prev" aria-label="上一个 VIVO 场景">← 上一个</button><button id="vivo-next" aria-label="下一个 VIVO 场景">下一个 →</button></div></aside></div>
+      <div class="vivo-workspace"><div class="vivo-stage"><div class="stage-heading"><span id="vivo-name">场景 A01</span><span class="pill neutral">无真值</span><a id="vivo-download" class="text-link" download>下载 CSV ↓</a></div><div id="vivo-player"></div></div><aside class="vivo-sidebar"><div class="vivo-sidebar-heading"><h3>选择场景</h3><span id="vivo-count">全部 31 组</span></div><div id="vivo-filters" class="filter-row" aria-label="筛选 VIVO 分组"></div><div id="vivo-list" class="vivo-list" aria-label="VIVO 场景列表"></div><div class="vivo-bottom"><button id="vivo-prev" aria-label="上一个 VIVO 场景">← 上一个</button><button id="vivo-next" aria-label="下一个 VIVO 场景">下一个 →</button></div></aside></div>
       <p class="section-note">按采集时间回放 31 组测试轨迹。右侧速度由相邻位置随时间的变化计算。</p>
     </div></section>
   </main>

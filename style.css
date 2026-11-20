@@ -160,7 +160,8 @@ h2{font-size:clamp(28px,2.9vw,40px);line-height:1.35;font-weight:500;letter-spac
 .vivo-section .section-heading>div:last-child>p{margin-top:10px;font-size:11px;color:#718ba2}
 .vivo-workspace{display:grid;grid-template-columns:minmax(0,1fr) 250px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
 .vivo-stage{min-width:0}
-.vivo-stage .stage-heading{height:56px}
+.vivo-stage .stage-heading{min-height:56px;flex-wrap:wrap;gap:6px 12px}
+#vivo-download{margin-left:auto;min-height:36px;align-items:center;white-space:nowrap;text-decoration:underline;text-underline-offset:3px}
 .vivo-sidebar{border-left:1px solid var(--line);display:flex;flex-direction:column;padding:20px 17px 0;min-width:0}
 .vivo-sidebar-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
 .vivo-sidebar-heading h3{font-size:13px;font-weight:500}
