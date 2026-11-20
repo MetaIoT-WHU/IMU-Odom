@@ -176,6 +176,10 @@
     selectedVivo = id;
     const s = data.vivo.find(s => s.id === id);
     $('#vivo-name').textContent = `场景 ${id} · 预测轨迹`;
+    const download = $('#vivo-download');
+    download.href = s.csv;
+    download.download = `VIVO-${id}.csv`;
+    download.setAttribute('aria-label', `下载 VIVO 场景 ${id} 的轨迹 CSV`);
     makePlayer($('#vivo-player'), s);
     if (redraw) drawVivoList();
     announce(`已选择 VIVO 场景 ${id}，无真值`);
